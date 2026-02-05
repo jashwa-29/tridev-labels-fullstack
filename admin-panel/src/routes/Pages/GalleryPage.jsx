@@ -231,7 +231,7 @@ const GalleryPage = () => {
 
   useEffect(() => {
     if (!token) {
-      navigate("/login");
+      navigate("/");
       return;
     }
     fetchGallery();

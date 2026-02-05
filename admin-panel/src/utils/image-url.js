@@ -1,24 +1,30 @@
 /**
  * Utility function to construct image URLs for the admin panel
  * Handles both relative paths and absolute URLs
- * @param {string} path - Image path from the backend (relative or absolute)
- * @returns {string|null} - Full image URL or null if no path provided
+ * 
+ * Supports:
+ * - Full remote URLs (Unsplash, Cloudinary)
+ * - Base64 Data URLs
+ * - Local backend-relative paths (uploads/...)
+ * 
+ * @param {string} path - Image path or URL
+ * @returns {string|null} - Full image URL or null
  */
 export const getImgUrl = (path) => {
-  if (!path) return null;
+  if (!path || typeof path !== 'string') return null;
   
-  // If it's already a full URL or a data URL, return it as-is
+  // 1. If it's already a full URL or a data URL, return it as-is
   if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
     return path;
   }
   
-  // Get base backend URL from environment variable
-  const backendBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+  // 2. Resolve backend base URL from environment
+  const apiBase = import.meta.env.VITE_API_BASE_URL || '';
+  const baseUrl = apiBase.includes('/api') 
+    ? apiBase.replace('/api', '') 
+    : 'https://tridev-labels-fullstack.onrender.com';
   
-  // Remove '/api' suffix if present (we want the root domain)
-  const baseUrl = backendBaseUrl.replace('/api', '');
-  
-  // Ensure path starts with /
+  // 3. Normalize path (ensure leading slash)
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   
   return `${baseUrl}${normalizedPath}`;

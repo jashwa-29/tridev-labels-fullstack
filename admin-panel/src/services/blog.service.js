@@ -1,43 +1,54 @@
 import apiClient from '../lib/api-client';
 
+/**
+ * Service for Editorial/Blog content management
+ * Communicates with /api/blogs endpoints
+ */
 export const blogService = {
-  // Get all blogs with optional pagination and admin filter
-  getAll: (params = {}) => {
-    const { admin, page, limit } = params;
-    const query = new URLSearchParams();
-    if (admin) query.append('admin', 'true');
-    if (page) query.append('page', page);
-    if (limit) query.append('limit', limit);
-    
-    const queryString = query.toString();
-    return apiClient.get(`/blogs${queryString ? `?${queryString}` : ''}`);
+  /**
+   * Fetch all blogs with pagination and admin filters
+   * @param {Object} params - Query parameters (page, limit, admin)
+   * @returns {Promise<{data: Array, pages: number, total: number}>}
+   */
+  async getAll(params = {}) {
+    return apiClient.get('/blogs', { params });
   },
 
-  // Get by slug
-  getBySlug: (slug) => {
+  /**
+   * Fetch a single blog by slug
+   * @param {string} slug 
+   */
+  async getBySlug(slug) {
+    if (!slug) throw new Error('Blog slug is required');
     return apiClient.get(`/blogs/slug/${slug}`);
   },
 
-  // Create new blog
-  create: (formData) => {
+  /**
+   * Create a new blog post (Multipart/FormData for images)
+   * @param {FormData} formData 
+   */
+  async create(formData) {
     return apiClient.post('/blogs', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
 
-  // Update blog
-  update: (id, formData) => {
+  /**
+   * Update an existing blog post (Multipart/FormData for images)
+   * @param {string} id - Database ObjectID
+   * @param {FormData} formData 
+   */
+  async update(id, formData) {
     return apiClient.put(`/blogs/${id}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
 
-  // Delete blog
-  delete: (id) => {
+  /**
+   * Permanently delete a blog post
+   * @param {string} id - Database ObjectID
+   */
+  async delete(id) {
     return apiClient.delete(`/blogs/${id}`);
   }
 };

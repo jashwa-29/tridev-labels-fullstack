@@ -1,29 +1,54 @@
 import apiClient from '../lib/api-client';
 
+/**
+ * Service for Sales Quotes and Industrial Leads management
+ * Communicates with /api/quotes endpoints
+ */
 export const quoteService = {
-  // Get all quotes
-  getAll: (page = 1, limit = 10, source = null) => {
-    const sourceParam = source ? `&source=${source}` : '';
-    return apiClient.get(`/quotes?page=${page}&limit=${limit}${sourceParam}`);
+  /**
+   * Fetch all quote requests with pagination and source filtering
+   * @param {number} page 
+   * @param {number} limit 
+   * @param {string} source - Optional filter (e.g., 'home', 'contact')
+   * @returns {Promise<{data: Array, pages: number, total: number}>}
+   */
+  async getAll(page = 1, limit = 10, source = null) {
+    return apiClient.get('/quotes', { 
+      params: { page, limit, source: source || undefined } 
+    });
   },
 
-  // Get single quote
-  getById: (id) => {
+  /**
+   * Fetch details of a single quote request
+   * @param {string} id - Database ObjectID
+   */
+  async getById(id) {
+    if (!id) throw new Error('Quote ID is required');
     return apiClient.get(`/quotes/${id}`);
   },
 
-  // Update status
-  updateStatus: (id, status) => {
+  /**
+   * Update the status of a lead (e.g., 'pending', 'responded', 'converted')
+   * @param {string} id - Database ObjectID
+   * @param {string} status 
+   */
+  async updateStatus(id, status) {
     return apiClient.patch(`/quotes/${id}/status`, { status });
   },
 
-  // Delete quote
-  delete: (id) => {
+  /**
+   * Remove a quote record permanently
+   * @param {string} id - Database ObjectID
+   */
+  async delete(id) {
     return apiClient.delete(`/quotes/${id}`);
   },
   
-  // Get stats
-  getStats: () => {
+  /**
+   * Fetch aggregate statistics for sales leads
+   * @returns {Promise<any>}
+   */
+  async getStats() {
     return apiClient.get('/quotes/stats');
   }
 };

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
 import { Lock, Mail, Save, Loader2, AlertCircle, CheckCircle } from "lucide-react";
+import { authService } from "@/services";
 
 function SettingsPage() {
     const [currentPassword, setCurrentPassword] = useState("");
@@ -9,7 +9,6 @@ function SettingsPage() {
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const apiUri = import.meta.env.VITE_API_BASE_URL;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -17,25 +16,25 @@ function SettingsPage() {
         setError("");
         setMessage("");
 
-        const token = localStorage.getItem("token");
-
         try {
-            const res = await axios.put(
-                `${apiUri}/api/auth/edit-credentials`,
-                { currentPassword, newEmail, newPassword },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+            const res = await authService.updateCredentials({ 
+                currentPassword, 
+                newEmail, 
+                newPassword 
+            });
+            
             setMessage("Credentials updated successfully!");
+            
             // Optionally update user in local storage if email changed
-             if (res.data.user) {
+             if (res.user) {
                 const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
-                localStorage.setItem("user", JSON.stringify({ ...currentUser, ...res.data.user }));
+                localStorage.setItem("user", JSON.stringify({ ...currentUser, ...res.user }));
             }
             // Clear sensitive fields
             setCurrentPassword("");
             setNewPassword("");
         } catch (err) {
-            setError(err.response?.data?.error || "Failed to update credentials");
+            setError(err.message || "Failed to update credentials");
         } finally {
             setLoading(false);
         }

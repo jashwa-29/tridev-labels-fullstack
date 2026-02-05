@@ -1,20 +1,41 @@
 import apiClient from '@/lib/api-client';
 
+/**
+ * Service for Quote Requests and Leads
+ * Communicates with /api/quotes endpoints
+ */
 export const quoteService = {
-  submit: async (quoteData) => {
+  /**
+   * Submit a new quote request from the frontend
+   * @param {Object} quoteData - The form data from the contact/quote form
+   * @returns {Promise<any>}
+   */
+  async submit(quoteData) {
     return apiClient.post('/quotes', quoteData);
   },
 
-  // Admin methods (optional for now but good to have)
-  getAll: async () => {
+  /**
+   * Fetch all quotes (Admin Only)
+   * @returns {Promise<{data: Array}>}
+   */
+  async getAll() {
     return apiClient.get('/quotes');
   },
 
-  updateStatus: async (id, status) => {
+  /**
+   * Update the status of a quote (Admin Only)
+   * @param {string} id - Quote ID
+   * @param {string} status - New status (e.g., 'contacted', 'resolved')
+   */
+  async updateStatus(id, status) {
     return apiClient.patch(`/quotes/${id}`, { status });
   },
 
-  delete: async (id) => {
+  /**
+   * Delete a quote record (Admin Only)
+   * @param {string} id 
+   */
+  async delete(id) {
     return apiClient.delete(`/quotes/${id}`);
   }
 };

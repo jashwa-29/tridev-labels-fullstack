@@ -1,17 +1,16 @@
-"use client";
-
 import PageHeader from '@/components/common/PageHeader';
 import dynamic from 'next/dynamic';
-
-const ContactSection = dynamic(() => import('@/components/contact/ContactSection'), { 
-  ssr: true,
-  loading: () => <div className="h-96 bg-gray-50 animate-pulse" /> 
-});
+import ContactSection from '@/components/contact/ContactSection';
 
 const ContactMap = dynamic(() => import('@/components/contact/ContactMap'), { 
   ssr: false,
   loading: () => <div className="h-96 bg-gray-100 animate-pulse" /> 
 });
+
+export const metadata = {
+  title: "Contact Our Label Specialists | Tridev Labels",
+  description: "Connect with Tridev Labels for custom labeling solutions, technical consultations, or project inquiries.",
+};
 
 export default function ContactPage() {
   return (
@@ -25,7 +24,6 @@ export default function ContactPage() {
       />
       <ContactSection />
       <ContactMap />
-  
     </main>
   );
 }

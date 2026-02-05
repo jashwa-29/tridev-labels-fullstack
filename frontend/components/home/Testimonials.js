@@ -9,7 +9,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-import { testimonialService } from '@/lib/testimonialService';
+import { testimonialService } from '@/services/testimonial.service';
 
 const DEFAULT_TESTIMONIALS = [
   {

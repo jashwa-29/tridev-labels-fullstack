@@ -1,27 +1,44 @@
 import apiClient from '../lib/api-client';
 
+/**
+ * Service for Client Testimonials management
+ * Communicates with /api/testimonials endpoints
+ */
 export const testimonialService = {
-  // Get all testimonials
-  getAll: (isAdmin = false) => {
-    return apiClient.get(`/testimonials${isAdmin ? '?admin=true' : ''}`);
+  /**
+   * Fetch all client testimonials
+   * @param {boolean} isAdmin - Whether to include hidden items
+   * @returns {Promise<{data: Array}>}
+   */
+  async getAll(isAdmin = false) {
+    return apiClient.get('/testimonials', { params: { admin: isAdmin ? 'true' : undefined } });
   },
 
-  // Get by ID
-  getById: (id) => {
+  /**
+   * Fetch a single testimonial by ID
+   * @param {string} id - Database ObjectID
+   */
+  async getById(id) {
+    if (!id) throw new Error('Testimonial ID is required');
     return apiClient.get(`/testimonials/${id}`);
   },
 
-  // Create new testimonial
-  create: (formData) => {
+  /**
+   * Create a new client testimonial (Multipart/FormData for images)
+   * @param {FormData} formData 
+   */
+  async create(formData) {
     return apiClient.post('/testimonials', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
 
-  // Update testimonial
-  update: (id, formData) => {
+  /**
+   * Update an existing testimonial
+   * @param {string} id - Database ObjectID
+   * @param {FormData|Object} formData 
+   */
+  async update(id, formData) {
     const isFormData = formData instanceof FormData;
     return apiClient.put(`/testimonials/${id}`, formData, {
       headers: {
@@ -30,13 +47,19 @@ export const testimonialService = {
     });
   },
 
-  // Delete testimonial
-  delete: (id) => {
+  /**
+   * Remove a testimonial permanently
+   * @param {string} id - Database ObjectID
+   */
+  async delete(id) {
     return apiClient.delete(`/testimonials/${id}`);
   },
 
-  // Reorder testimonials
-  reorder: (orders) => {
+  /**
+   * Batch update ordering of testimonials
+   * @param {Array<{_id: string, order: number}>} orders 
+   */
+  async reorder(orders) {
     return apiClient.post('/testimonials/reorder', { orders });
   }
 };

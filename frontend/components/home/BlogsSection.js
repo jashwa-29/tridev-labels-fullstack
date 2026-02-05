@@ -14,18 +14,19 @@ import { getImgUrl } from '@/utils/image-url';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function BlogsSection() {
+export default function BlogsSection({ initialBlogs = [] }) {
   const containerRef = useRef(null);
   const headerRef = useRef(null);
-  const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [blogs, setBlogs] = useState(initialBlogs);
+  const [loading, setLoading] = useState(initialBlogs.length === 0);
 
-  // Fetch blogs on mount
+  // Fetch blogs on mount if not provided via SSR
   useEffect(() => {
+    if (initialBlogs.length > 0) return;
+
     const fetchRecentBlogs = async () => {
       try {
         const response = await blogService.getAll(1, 4); // Fetch 4 recent blogs
-        // Standardized response handling: apiClient returns the whole JSON body
         const items = response?.data || [];
         setBlogs(Array.isArray(items) ? items : []);
       } catch (error) {
@@ -35,7 +36,7 @@ export default function BlogsSection() {
       }
     };
     fetchRecentBlogs();
-  }, []);
+  }, [initialBlogs]);
 
   // Animations (run only after loading is done and we have blogs)
   useEffect(() => {

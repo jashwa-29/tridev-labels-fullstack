@@ -1,22 +1,35 @@
 import apiClient from '../lib/api-client';
 
+/**
+ * Service for Gallery and Industrial Finishes management
+ * Communicates with /api/gallery endpoints
+ */
 export const galleryService = {
-  // Get all gallery items
-  getAll: (isAdmin = false) => {
-    return apiClient.get(`/gallery${isAdmin ? '?admin=true' : ''}`);
+  /**
+   * Fetch all gallery items
+   * @param {boolean} isAdmin - Whether to include hidden items
+   * @returns {Promise<{data: Array}>}
+   */
+  async getAll(isAdmin = false) {
+    return apiClient.get('/gallery', { params: { admin: isAdmin ? 'true' : undefined } });
   },
 
-  // Create new gallery item
-  create: (formData) => {
+  /**
+   * Create a new gallery entry (Multipart/FormData for images)
+   * @param {FormData} formData 
+   */
+  async create(formData) {
     return apiClient.post('/gallery', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
 
-  // Update gallery item
-  update: (id, formData) => {
+  /**
+   * Update an existing gallery entry
+   * @param {string} id - Database ObjectID
+   * @param {FormData|Object} formData 
+   */
+  async update(id, formData) {
     const isFormData = formData instanceof FormData;
     return apiClient.put(`/gallery/${id}`, formData, {
       headers: {
@@ -25,13 +38,19 @@ export const galleryService = {
     });
   },
 
-  // Delete gallery item
-  delete: (id) => {
+  /**
+   * Remove a gallery entry permanently
+   * @param {string} id - Database ObjectID
+   */
+  async delete(id) {
     return apiClient.delete(`/gallery/${id}`);
   },
 
-  // Reorder gallery items
-  reorder: (orders) => {
+  /**
+   * Batch update ordering of gallery items
+   * @param {Array<{_id: string, order: number}>} orders 
+   */
+  async reorder(orders) {
     return apiClient.post('/gallery/reorder', { orders });
   }
 };

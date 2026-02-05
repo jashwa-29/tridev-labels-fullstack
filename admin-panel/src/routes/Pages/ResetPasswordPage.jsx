@@ -1,7 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Lock, ArrowRight, Loader2, AlertCircle } from "lucide-react";
+import { authService } from "@/services";
 
 function ResetPasswordPage() {
     const [password, setPassword] = useState("");
@@ -10,15 +10,12 @@ function ResetPasswordPage() {
     const [loading, setLoading] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
-    const apiUri = import.meta.env.VITE_API_BASE_URL;
 
     // Get token from state passed by navigate()
     const resetToken = location.state?.token;
 
     // Redirect to login if no token is present (accessing page directly)
     if (!resetToken) {
-        // Use a useEffect-like pattern or just render a redirect
-        // For simplicity in render:
         return (
             <div className="min-h-screen flex items-center justify-center p-4">
                  <div className="text-center">
@@ -41,10 +38,10 @@ function ResetPasswordPage() {
         }
 
         try {
-            await axios.put(`${apiUri}/api/auth/resetpassword`, { token: resetToken, password });
+            await authService.resetPassword(resetToken, password);
             navigate("/"); // Redirect to login
         } catch (err) {
-            setError(err.response?.data?.error || "Invalid or expired token");
+            setError(err.message || "Invalid or expired token");
         } finally {
             setLoading(false);
         }

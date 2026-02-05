@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  metadataBase: new URL('http://localhost:3000'),
+  metadataBase: new URL('https://tridevlabels.com'), // Replace with actual domain
   title: "Tridev Labels - Precision Printing",
   description: "Excellence in label printing and packaging.",
   icons: {
@@ -34,11 +34,9 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://i.pinimg.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="http://localhost:5000" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
         <link rel="dns-prefetch" href="https://i.pinimg.com" />
-        <link rel="dns-prefetch" href="http://localhost:5000" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

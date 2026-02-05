@@ -1,7 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, ArrowRight, Loader2, AlertCircle, CheckCircle, KeyRound } from "lucide-react";
+import { authService } from "@/services";
 
 function ForgotPasswordPage() {
     const [email, setEmail] = useState("");
@@ -10,7 +10,6 @@ function ForgotPasswordPage() {
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const apiUri = import.meta.env.VITE_API_BASE_URL;
     const navigate = useNavigate();
 
     const handleSendOtp = async (e) => {
@@ -19,11 +18,11 @@ function ForgotPasswordPage() {
         setError("");
         setMessage("");
         try {
-            await axios.post(`${apiUri}/api/auth/forgotpassword`, { email });
+            await authService.sendOtp(email);
             setMessage("OTP sent! Check your email.");
             setStep(2);
         } catch (err) {
-            setError(err.response?.data?.error || "Something went wrong. Please try again.");
+            setError(err.message || "Something went wrong. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -35,11 +34,11 @@ function ForgotPasswordPage() {
         setError("");
         setMessage("");
         try {
-            const res = await axios.post(`${apiUri}/api/auth/verifyotp`, { email, otp });
+            const res = await authService.verifyOtp(email, otp);
             // Navigate to reset password page with token in state (hidden from URL)
-            navigate("/reset-password", { state: { token: res.data.resetToken } });
+            navigate("/reset-password", { state: { token: res.resetToken } });
         } catch (err) {
-            setError(err.response?.data?.error || "Invalid OTP. Please try again.");
+            setError(err.message || "Invalid OTP. Please try again.");
         } finally {
             setLoading(false);
         }

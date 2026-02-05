@@ -239,7 +239,7 @@ const ServicesPage = () => {
 
   useEffect(() => {
     if (!token) {
-      navigate("/login");
+      navigate("/");
       return;
     }
     fetchServices();

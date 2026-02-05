@@ -1,14 +1,14 @@
-"use client";
-
 import PageHeader from '@/components/common/PageHeader';
-import dynamic from 'next/dynamic';
-
 import AboutApproach from '@/components/about/AboutApproach';
 import AboutMetrics from '@/components/about/AboutMetrics';
+import AboutValues from '@/components/about/AboutValues';
+import HistoryTimeline from '@/components/about/HistoryTimeline';
+import AboutTestimonials from '@/components/about/AboutTestimonials';
 
-const AboutValues = dynamic(() => import('@/components/about/AboutValues'), { ssr: false });
-const HistoryTimeline = dynamic(() => import('@/components/about/HistoryTimeline'), { ssr: false });
-const AboutTestimonials = dynamic(() => import('@/components/about/AboutTestimonials'), { ssr: false });
+export const metadata = {
+  title: "Label Printing Excellence Since 2008 | Tridev Labels",
+  description: "Sixteen years of industrial excellence. Trridev Labelss is a dedicated partner to global brands, delivering precision printing solutions.",
+};
 
 export default function AboutPage() {
   return (
@@ -25,7 +25,6 @@ export default function AboutPage() {
       <AboutValues />
       <HistoryTimeline />
       <AboutTestimonials />
-  
     </main>
   );
 }
