@@ -42,6 +42,7 @@ const allowedOrigins = [
   'https://adminpanel.aestheticstudio.in',
   'https://tridev-labels.vercel.app',
   'http://localhost:5173', 
+  'https://tridev-admin-panel.netlify.app'
 ];    
 
 const corsOptions = {
