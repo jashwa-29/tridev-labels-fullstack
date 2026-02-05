@@ -17,11 +17,8 @@ export const getImgUrl = (path) => {
   }
   
   // 2. Resolve backend base URL
-  // We prefer the environment variable, but fallback to a reasonable default for production/dev
-  const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
-  const backendBaseUrl = apiBase.includes('/api') 
-    ? apiBase.replace('/api', '') 
-    : 'https://tridev-labels-fullstack.onrender.com';
+  const apiBase = process.env.NEXT_PUBLIC_API_URL;
+  const backendBaseUrl = apiBase.replace(/\/api$/, '').replace(/\/api\/$/, '');
     
   // 3. Normalize the path (ensure single slash between base and path)
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;

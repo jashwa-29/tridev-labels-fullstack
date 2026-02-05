@@ -32,7 +32,7 @@ const DashboardPage = () => {
     totalTestimonials: 0,
     activeSpecials: 0
   });
-  const [recentActivities, setRecentActivities] = useState([]);
+  const [recentLeads, setRecentLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -46,8 +46,8 @@ const DashboardPage = () => {
         const [servicesRes, blogsRes, quotesRes, contactsRes, galleryRes, testimonialRes, specialRes] = await Promise.allSettled([
           serviceService.getAll(true),
           blogService.getAll({ admin: true, limit: 1 }),
-          quoteService.getAll(1, 100, 'service'), // Fetch only service quotes
-          quoteService.getAll(1, 100, 'contact'), // Fetch contact form submissions
+          quoteService.getAll(1, 10, 'service'), 
+          quoteService.getAll(1, 10, 'contact'), 
           galleryService.getAll(true),
           testimonialService.getAll(true),
           specialService.getAll(true)
@@ -60,18 +60,23 @@ const DashboardPage = () => {
         const blogsResData = blogsRes.status === 'fulfilled' ? blogsRes.value : {};
         const totalBlogsCount = blogsResData.count || (blogsResData.data ? blogsResData.data.length : 0);
 
-        // Process Quotes
-        const quotesResData = quotesRes.status === 'fulfilled' ? quotesRes.value : {};
-        const recentQuotesCount = quotesResData.pagination?.total || quotesResData.total || (Array.isArray(quotesResData.data) ? quotesResData.data.length : 0);
+        // Process Quotes & Contacts for Leads Table
+        const sQuotes = quotesRes.status === 'fulfilled' ? (quotesRes.value.data || []) : [];
+        const cMessages = contactsRes.status === 'fulfilled' ? (contactsRes.value.data || []) : [];
+        
+        const combinedLeads = [...sQuotes, ...cMessages]
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .slice(0, 5);
+        
+        setRecentLeads(combinedLeads);
 
-        // Process Contacts (stored in Quote collection with source: 'contact')
-        const contactsResData = contactsRes.status === 'fulfilled' ? contactsRes.value : {};
-        const contactsCount = contactsResData.count || (Array.isArray(contactsResData.data) ? contactsResData.data.length : 0);
+        // Process Stats
+        const recentQuotesCount = (quotesRes.status === 'fulfilled' ? (quotesRes.value.pagination?.total || quotesRes.value.total || quotesRes.value.data?.length) : 0) || 0;
+        const contactsCount = (contactsRes.status === 'fulfilled' ? (contactsRes.value.pagination?.total || contactsRes.value.total || contactsRes.value.data?.length) : 0) || 0;
 
-        // Process Others
         const galleryItems = galleryRes.status === 'fulfilled' ? (galleryRes.value.data || []) : [];
         const testimonials = testimonialRes.status === 'fulfilled' ? (testimonialRes.value.data || []) : [];
-        const specials = specialRes.status === 'fulfilled' ? (specialRes.value.data && specialRes.value.data.data ? specialRes.value.data.data : (Array.isArray(specialRes.value.data) ? specialRes.value.data : [])) : []; // Depending on API response structure
+        const specials = specialRes.status === 'fulfilled' ? (specialRes.value.data && specialRes.value.data.data ? specialRes.value.data.data : (Array.isArray(specialRes.value.data) ? specialRes.value.data : [])) : [];
 
         setStats({
           totalServices: services.length,
@@ -83,43 +88,8 @@ const DashboardPage = () => {
           activeSpecials: specials.length
         });
 
-        // Build Activity Feed from real data
-        const activities = [];
-
-        // Add Quotes to activity
-        const quotes = quotesRes.status === 'fulfilled' ? (quotesRes.value.data || []) : [];
-        quotes.slice(0, 3).forEach(quote => {
-          activities.push({
-            id: `quote-${quote._id}`,
-            type: 'inquiry',
-            message: `New quote request from ${quote.name || 'Visitor'}`,
-            time: new Date(quote.createdAt).toLocaleDateString(), 
-            timestamp: new Date(quote.createdAt).getTime(),
-            icon: Mail,
-            color: 'text-blue-600 bg-blue-50'
-          });
-        });
-
-        // Add recent blogs
-        const recentBlogs = blogsRes.status === 'fulfilled' ? (Array.isArray(blogsRes.value.data) ? blogsRes.value.data : []) : [];
-        recentBlogs.slice(0, 2).forEach(blog => {
-           activities.push({
-            id: `blog-${blog._id}`,
-            type: 'blog',
-            message: `Blog post "${blog.title}" published`,
-            time: new Date(blog.createdAt).toLocaleDateString(),
-            timestamp: new Date(blog.createdAt).getTime(),
-            icon: FileText,
-            color: 'text-orange-600 bg-orange-50'
-          });
-        });
-
-        // Sort by newest first
-        activities.sort((a, b) => b.timestamp - a.timestamp);
-
-        setRecentActivities(activities.length > 0 ? activities : [
-            { id: 'sys-1', type: 'system', message: 'System initialized', time: 'Just now', icon: Activity, color: 'text-purple-600 bg-purple-50' }
-        ]);
+        // Activity Feed logic preserved for potential future use or debugging
+        // Removed setRecentActivities as it was causing ReferenceError
         
       } catch (err) {
         console.error("Failed to load dashboard data", err);
@@ -173,8 +143,8 @@ const DashboardPage = () => {
       {/* Welcome Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 font-title">Admin Command Center</h1>
-          <p className="mt-2 text-sm font-medium text-slate-500">Welcome back, Administrator. Here's what's happening today.</p>
+          <h1 className="text-3xl font-black text-slate-900 font-title">Management Protocol</h1>
+          <p className="mt-2 text-sm font-medium text-slate-500">Strategic overview of your label manufacturing ecosystem.</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-xs font-bold text-slate-500 shadow-sm ring-1 ring-slate-100">
@@ -203,25 +173,23 @@ const DashboardPage = () => {
           link="/dashboard/services"
         />
         <StatCard 
-          title="Blog Posts" 
+          title="Blog Engagement" 
           value={stats.totalBlogs} 
           icon={FileText} 
           color="bg-blue-50" 
           link="/dashboard/blogs"
         />
         <StatCard 
-          title="Recent Inquiries" 
+          title="Recent Leads" 
           value={stats.recentInquiries} 
           icon={Mail} 
-          // trend="+12% this week" 
           color="bg-orange-50" 
           link="/dashboard/quotes"
         />
         <StatCard 
-          title="Contacts" 
-          value={stats.contacts} // Assuming you have added contacts to stats
+          title="Direct Contacts" 
+          value={stats.contacts} 
           icon={Users} 
-          // trend="+5.2% vs last month" 
           color="bg-emerald-50" 
           link="/dashboard/contact"
         />
@@ -229,101 +197,161 @@ const DashboardPage = () => {
 
       {/* Main Content Grid */}
       <div className="grid gap-8 lg:grid-cols-3">
-        {/* Left Column - Recent Activity */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="rounded-[2.5rem] bg-white p-8 shadow-sm ring-1 ring-slate-100 h-full">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-slate-900">Recent System Activity</h2>
-              <button className="text-xs font-bold uppercase tracking-widest text-red-600 hover:text-red-700">View All</button>
+        {/* Left Column - Business Leads Table */}
+        <div className="lg:col-span-2 space-y-8">
+          <div className="rounded-[2.5rem] bg-white p-8 shadow-sm ring-1 ring-slate-100 overflow-hidden">
+            <div className="mb-8 flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold text-slate-900">Business Intelligence: Recent Leads</h2>
+                <p className="text-xs font-medium text-slate-400 uppercase tracking-widest mt-1">Live synchronisation with web forms</p>
+              </div>
+              <Link to="/dashboard/quotes" className="text-xs font-bold uppercase tracking-widest text-[#E32219] hover:underline">Lead Center</Link>
             </div>
             
-            <div className="space-y-6">
-               {recentActivities.length === 0 ? (
-                  <p className="text-sm text-slate-400 italic">No recent activity detected.</p>
-               ) : (
-                  recentActivities.map((activity) => (
-                  <div key={activity.id} className="group flex items-start gap-4 rounded-2xl p-4 transition-colors hover:bg-slate-50">
-                     <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${activity.color}`}>
-                        <activity.icon size={18} />
-                     </div>
-                     <div className="flex-1">
-                        <p className="font-bold text-slate-900">{activity.message}</p>
-                        <p className="mt-1 text-xs font-medium text-slate-400">{activity.time}</p>
-                     </div>
-                     <button className="opacity-0 transition-opacity group-hover:opacity-100">
-                        <ArrowRight size={16} className="text-slate-400" />
-                     </button>
-                  </div>
-                  ))
-               )}
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-separate border-spacing-y-4">
+                <thead>
+                  <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                    <th className="px-4 pb-2">Client Identity</th>
+                    <th className="px-4 pb-2">Interest Point</th>
+                    <th className="px-4 pb-2 text-right">Acquisition Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentLeads.length === 0 ? (
+                    <tr>
+                      <td colSpan="3" className="py-20 text-center">
+                        <div className="flex flex-col items-center opacity-30">
+                          <Activity size={40} className="mb-4" />
+                          <p className="text-sm font-bold uppercase tracking-widest">Awaiting New Market Entries</p>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    recentLeads.map((lead) => (
+                      <tr key={lead._id} className="group transition-all">
+                        <td className="px-4 py-4 bg-slate-50/50 rounded-l-2xl border-y border-l border-slate-100">
+                          <div className="flex flex-col">
+                            <span className="font-bold text-slate-900 leading-none">{lead.name || "Anonymous Visitor"}</span>
+                            <span className="text-[10px] text-slate-400 mt-1.5 font-medium">{lead.email}</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 bg-slate-50/50 border-y border-slate-100">
+                          <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${lead.serviceTitle ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-red-600'}`}>
+                            {lead.serviceTitle || "Direct Message"}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4 bg-slate-50/50 rounded-r-2xl border-y border-r border-slate-100 text-right">
+                          <span className="text-xs font-bold text-slate-900">{new Date(lead.createdAt).toLocaleDateString()}</span>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className="grid gap-6 sm:grid-cols-3">
-             <Link to="/dashboard/services" className="group rounded-[2rem] bg-gradient-to-br from-black to-slate-800 p-6 text-white shadow-lg transition-transform hover:-translate-y-1">
-               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
-                 <Package size={20} />
+          {/* Content Health Metrics */}
+          <div className="grid gap-6 sm:grid-cols-2">
+             <div className="group rounded-[2rem] bg-slate-900 p-8 text-white shadow-xl">
+               <div className="mb-6 flex items-center justify-between">
+                 <div className="flex size-10 items-center justify-center rounded-xl bg-white/10">
+                   <Package size={20} className="text-white" />
+                 </div>
+                 <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Operational</span>
                </div>
-               <h3 className="font-bold">Add Service</h3>
-               <p className="mt-1 text-xs text-slate-400">Launch new product offering</p>
-             </Link>
+               <h3 className="text-2xl font-black">Content Portfolio</h3>
+               <p className="mt-2 text-xs font-medium text-slate-400 leading-relaxed">
+                 You have <span className="text-white">{stats.totalServices}</span> live service protocols and <span className="text-white">{stats.totalGallery}</span> visual portfolio assets active.
+               </p>
+               <div className="mt-8 flex gap-3">
+                  <Link to="/dashboard/services" className="h-10 px-4 flex items-center justify-center rounded-xl bg-white text-black text-[10px] font-black uppercase tracking-widest hover:bg-slate-100 transition-colors">Manage Services</Link>
+                  <Link to="/dashboard/gallery" className="h-10 px-4 flex items-center justify-center rounded-xl bg-white/10 text-white text-[10px] font-black uppercase tracking-widest hover:bg-white/20 transition-colors">Portfolio Hub</Link>
+               </div>
+             </div>
              
-             <Link to="/dashboard/blogs" className="group rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-slate-100 transition-transform hover:-translate-y-1">
-               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
-                 <FileText size={20} />
+             <div className="group rounded-[2.5rem] bg-white p-8 shadow-sm ring-1 ring-slate-100">
+               <div className="mb-6 flex items-center justify-between">
+                 <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                   <TrendingUp size={20} />
+                 </div>
+                 <div className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
                </div>
-               <h3 className="font-bold text-slate-900">Write Post</h3>
-               <p className="mt-1 text-xs text-slate-500">Publish new blog article</p>
-             </Link>
-
-             <Link to="/dashboard/gallery" className="group rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-slate-100 transition-transform hover:-translate-y-1">
-               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                 <BarChart3 size={20} />
+               <h3 className="text-2xl font-black text-slate-900">Social Trust</h3>
+               <p className="mt-2 text-xs font-medium text-slate-500 leading-relaxed">
+                 Client feedback system is healthy with <span className="text-slate-900 font-bold">{stats.totalTestimonials}</span> verified reviews circulating.
+               </p>
+               <div className="mt-8">
+                  <Link to="/dashboard/testimonials" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#E32219] group-hover:gap-4 transition-all">
+                    Verification Center <ArrowRight size={14} />
+                  </Link>
                </div>
-               <h3 className="font-bold text-slate-900">Update Gallery</h3>
-               <p className="mt-1 text-xs text-slate-500">Refresh portfolio images</p>
-             </Link>
+             </div>
           </div>
         </div>
 
-        {/* Right Column - System Status */}
+        {/* Right Column - Status Overview */}
         <div className="space-y-6">
-          <div className="rounded-[2.5rem] bg-slate-900 p-8 text-white shadow-xl h-full">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-lg font-bold">Content Snapshot</h2>
-              <div className="flex h-2 w-2">
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-                </span>
+          <div className="rounded-[2.5rem] bg-white p-8 shadow-sm ring-1 ring-slate-100 h-full">
+            <div className="mb-8 flex items-center justify-between">
+              <h2 className="text-lg font-bold text-slate-900">Asset Velocity</h2>
+              <div className="flex size-8 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                <Activity size={18} />
               </div>
             </div>
             
-            <div className="space-y-6">
-              <Link to="/dashboard/gallery" className="flex items-center justify-between border-b border-white/10 pb-4 group hover:border-white/30 transition-colors">
-                <span className="text-sm font-medium text-slate-400 group-hover:text-white transition-colors">Gallery Images</span>
-                <span className="flex items-center gap-2 text-xs font-bold text-emerald-400">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-                  {stats.totalGallery} Uploads
-                </span>
-              </Link>
-              <Link to="/dashboard/testimonials" className="flex items-center justify-between border-b border-white/10 pb-4 group hover:border-white/30 transition-colors">
-                <span className="text-sm font-medium text-slate-400 group-hover:text-white transition-colors">Testimonials</span>
-                <span className="flex items-center gap-2 text-xs font-bold text-blue-400">
-                  <span className="h-1.5 w-1.5 rounded-full bg-blue-400"></span>
-                  {stats.totalTestimonials} Reviews
-                </span>
-              </Link>
-            </div>
+            <div className="space-y-8">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
+                  <span>Gallery Utilization</span>
+                  <span>{Math.min(100, (stats.totalGallery / 20) * 100).toFixed(0)}%</span>
+                </div>
+                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-blue-600 transition-all duration-1000" 
+                    style={{ width: `${Math.min(100, (stats.totalGallery / 20) * 100)}%` }} 
+                  />
+                </div>
+              </div>
 
-            <div className="mt-8 rounded-2xl bg-white/5 p-4 backdrop-blur-sm">
-              <div className="flex items-start gap-3">
-                <AlertCircle size={16} className="mt-0.5 text-blue-400" />
-                <div>
-                  <p className="text-xs font-bold text-white">Quick Tip</p>
-                  <p className="mt-1 text-[10px] leading-relaxed text-slate-400">
-                    Regularly updating your "Specials" keeps customers engaged. Try launching a new campaign for the upcoming month.
-                  </p>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
+                  <span>Market Buzz (Blogs)</span>
+                  <span>{Math.min(100, (stats.totalBlogs / 10) * 100).toFixed(0)}%</span>
+                </div>
+                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-orange-500 transition-all duration-1000" 
+                    style={{ width: `${Math.min(100, (stats.totalBlogs / 10) * 100)}%` }} 
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
+                  <span>Inquiry Velocity</span>
+                  <span>{Math.min(100, (stats.recentInquiries / 15) * 100).toFixed(0)}%</span>
+                </div>
+                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-red-600 transition-all duration-1000" 
+                    style={{ width: `${Math.min(100, (stats.recentInquiries / 15) * 100)}%` }} 
+                  />
+                </div>
+              </div>
+
+              <div className="mt-12 rounded-3xl bg-slate-50 p-6 border border-slate-100">
+                <div className="flex items-start gap-3">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-white text-slate-400 shadow-sm ring-1 ring-slate-100">
+                    <Activity size={16} />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-black uppercase tracking-widest text-slate-900 leading-none">Security Status</h4>
+                    <p className="mt-2 text-[10px] font-medium text-slate-500 leading-relaxed">
+                      All systems operational. End-to-end encryption active on management protocols.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

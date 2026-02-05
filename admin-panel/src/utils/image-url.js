@@ -19,10 +19,8 @@ export const getImgUrl = (path) => {
   }
   
   // 2. Resolve backend base URL from environment
-  const apiBase = import.meta.env.VITE_API_BASE_URL || '';
-  const baseUrl = apiBase.includes('/api') 
-    ? apiBase.replace('/api', '') 
-    : 'https://tridev-labels-fullstack.onrender.com';
+  const apiBase = import.meta.env.VITE_API_BASE_URL;
+  const baseUrl = apiBase.replace(/\/api$/, '').replace(/\/api\/$/, '');
   
   // 3. Normalize path (ensure leading slash)
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
