@@ -73,11 +73,11 @@ app.use(helmet({
 // });
 // app.use('/api', limiter);
         
-// 5. Logging
+// 5. Logging  
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 } else {
-  app.use(morgan('combined'));    
+  app.use(morgan('combined'));     
 }  
 
 // 6. Sanitization

@@ -7,6 +7,9 @@ const connectDB = async () => {
         console.log(`✅ MongoDB Connected: ${conn.connection.host}`.cyan.underline.bold);
     } catch (err) {
         console.error(`❌ Error: ${err.message}`.red);
+        if (err.message.includes('auth') || err.message.includes('Authentication failed')) {
+            console.error('👉 Tip: Check your MONGO_URI in Render Environment Variables. Ensure the password is correct and special characters are URL-encoded.'.yellow);
+        }
         process.exit(1);
     }
 };
