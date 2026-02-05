@@ -1,0 +1,337 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  BarChart3, 
+  Users, 
+  ShoppingBag, 
+  TrendingUp, 
+  ArrowRight,
+  Package,
+  FileText,
+  Mail,
+  Activity,
+  Calendar,
+  AlertCircle,
+  Loader2
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { serviceService } from '../../services/service.service';
+import { blogService } from '../../services/blog.service';
+import { quoteService } from '../../services/quote.service';
+import { contactService } from '../../services/contact.service';
+import { galleryService } from '../../services/gallery.service';
+import { testimonialService } from '../../services/testimonial.service';
+import { specialService } from '../../services/special.service';
+
+const DashboardPage = () => {
+  const [stats, setStats] = useState({
+    totalServices: 0,
+    contacts: 0,
+    totalBlogs: 0,
+    recentInquiries: 0,
+    totalGallery: 0,
+    totalTestimonials: 0,
+    activeSpecials: 0
+  });
+  const [recentActivities, setRecentActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Fetch data in parallel
+        const [servicesRes, blogsRes, quotesRes, contactsRes, galleryRes, testimonialRes, specialRes] = await Promise.allSettled([
+          serviceService.getAll(true),
+          blogService.getAll({ admin: true, limit: 1 }),
+          quoteService.getAll(1, 100, 'service'), // Fetch only service quotes
+          quoteService.getAll(1, 100, 'contact'), // Fetch contact form submissions
+          galleryService.getAll(true),
+          testimonialService.getAll(true),
+          specialService.getAll(true)
+        ]);
+
+        // Process Services
+        const services = servicesRes.status === 'fulfilled' ? (servicesRes.value.data || []) : [];
+        
+        // Process Blogs
+        const blogsResData = blogsRes.status === 'fulfilled' ? blogsRes.value : {};
+        const totalBlogsCount = blogsResData.count || (blogsResData.data ? blogsResData.data.length : 0);
+
+        // Process Quotes
+        const quotesResData = quotesRes.status === 'fulfilled' ? quotesRes.value : {};
+        const recentQuotesCount = quotesResData.pagination?.total || quotesResData.total || (Array.isArray(quotesResData.data) ? quotesResData.data.length : 0);
+
+        // Process Contacts (stored in Quote collection with source: 'contact')
+        const contactsResData = contactsRes.status === 'fulfilled' ? contactsRes.value : {};
+        const contactsCount = contactsResData.count || (Array.isArray(contactsResData.data) ? contactsResData.data.length : 0);
+
+        // Process Others
+        const galleryItems = galleryRes.status === 'fulfilled' ? (galleryRes.value.data || []) : [];
+        const testimonials = testimonialRes.status === 'fulfilled' ? (testimonialRes.value.data || []) : [];
+        const specials = specialRes.status === 'fulfilled' ? (specialRes.value.data && specialRes.value.data.data ? specialRes.value.data.data : (Array.isArray(specialRes.value.data) ? specialRes.value.data : [])) : []; // Depending on API response structure
+
+        setStats({
+          totalServices: services.length,
+          contacts: contactsCount,
+          totalBlogs: totalBlogsCount,
+          recentInquiries: recentQuotesCount,
+          totalGallery: galleryItems.length,
+          totalTestimonials: testimonials.length,
+          activeSpecials: specials.length
+        });
+
+        // Build Activity Feed from real data
+        const activities = [];
+
+        // Add Quotes to activity
+        const quotes = quotesRes.status === 'fulfilled' ? (quotesRes.value.data || []) : [];
+        quotes.slice(0, 3).forEach(quote => {
+          activities.push({
+            id: `quote-${quote._id}`,
+            type: 'inquiry',
+            message: `New quote request from ${quote.name || 'Visitor'}`,
+            time: new Date(quote.createdAt).toLocaleDateString(), 
+            timestamp: new Date(quote.createdAt).getTime(),
+            icon: Mail,
+            color: 'text-blue-600 bg-blue-50'
+          });
+        });
+
+        // Add recent blogs
+        const recentBlogs = blogsRes.status === 'fulfilled' ? (Array.isArray(blogsRes.value.data) ? blogsRes.value.data : []) : [];
+        recentBlogs.slice(0, 2).forEach(blog => {
+           activities.push({
+            id: `blog-${blog._id}`,
+            type: 'blog',
+            message: `Blog post "${blog.title}" published`,
+            time: new Date(blog.createdAt).toLocaleDateString(),
+            timestamp: new Date(blog.createdAt).getTime(),
+            icon: FileText,
+            color: 'text-orange-600 bg-orange-50'
+          });
+        });
+
+        // Sort by newest first
+        activities.sort((a, b) => b.timestamp - a.timestamp);
+
+        setRecentActivities(activities.length > 0 ? activities : [
+            { id: 'sys-1', type: 'system', message: 'System initialized', time: 'Just now', icon: Activity, color: 'text-purple-600 bg-purple-50' }
+        ]);
+        
+      } catch (err) {
+        console.error("Failed to load dashboard data", err);
+        setError("Could not load dashboard data. Please try refreshing.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  const StatCard = ({ title, value, icon: Icon, trend, color, link }) => (
+    <Link to={link || '#'} className="group relative overflow-hidden rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-slate-100 transition-all hover:shadow-md hover:ring-slate-200">
+      <div className={`absolute -right-6 -top-6 h-24 w-24 rounded-full ${color} opacity-10 transition-transform group-hover:scale-150`} />
+      <div className="relative flex items-center justify-between">
+        <div>
+          <p className="text-sm font-bold uppercase tracking-widest text-slate-400">{title}</p>
+          <h3 className="mt-2 text-3xl font-black text-slate-900">{value}</h3>
+          {trend && (
+             <p className="mt-2 flex items-center gap-1 text-xs font-bold text-emerald-600">
+              <TrendingUp size={14} />
+              <span>{trend}</span>
+            </p>
+          )}
+        </div>
+        <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${color} bg-opacity-10 text-opacity-100`}>
+          <Icon size={28} className={color.replace('bg-', 'text-').replace('50', '600')} />
+        </div>
+      </div>
+      <div className="mt-4 flex items-center gap-2 text-xs font-bold text-slate-400 group-hover:text-black transition-colors">
+        <span>View Details</span>
+        <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+      </div>
+    </Link>
+  );
+
+  if (loading) {
+     return (
+        <div className="flex h-[80vh] w-full items-center justify-center">
+           <div className="flex flex-col items-center gap-4">
+              <Loader2 className="h-10 w-10 animate-spin text-red-600" />
+              <p className="text-sm font-bold text-slate-400 animate-pulse">Initializing Dashboard...</p>
+           </div>
+        </div>
+     );
+  }
+
+  return (
+    <div className="space-y-8 animate-in fade-in duration-500">
+      {/* Welcome Header */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-3xl font-black text-slate-900 font-title">Admin Command Center</h1>
+          <p className="mt-2 text-sm font-medium text-slate-500">Welcome back, Administrator. Here's what's happening today.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-xs font-bold text-slate-500 shadow-sm ring-1 ring-slate-100">
+            <Calendar size={14} />
+            <span>{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</span>
+          </div>
+        </div>
+      </div>
+
+       {error && (
+        <div className="rounded-2xl border border-red-100 bg-red-50 p-4 text-sm font-medium text-red-800">
+          <div className="flex items-center gap-2">
+            <AlertCircle size={16} />
+            {error}
+          </div>
+        </div>
+      )}
+
+      {/* Stats Grid */}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard 
+          title="Total Services" 
+          value={stats.totalServices} 
+          icon={Package} 
+          color="bg-purple-50" 
+          link="/dashboard/services"
+        />
+        <StatCard 
+          title="Blog Posts" 
+          value={stats.totalBlogs} 
+          icon={FileText} 
+          color="bg-blue-50" 
+          link="/dashboard/blogs"
+        />
+        <StatCard 
+          title="Recent Inquiries" 
+          value={stats.recentInquiries} 
+          icon={Mail} 
+          // trend="+12% this week" 
+          color="bg-orange-50" 
+          link="/dashboard/quotes"
+        />
+        <StatCard 
+          title="Contacts" 
+          value={stats.contacts} // Assuming you have added contacts to stats
+          icon={Users} 
+          // trend="+5.2% vs last month" 
+          color="bg-emerald-50" 
+          link="/dashboard/contact"
+        />
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="grid gap-8 lg:grid-cols-3">
+        {/* Left Column - Recent Activity */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="rounded-[2.5rem] bg-white p-8 shadow-sm ring-1 ring-slate-100 h-full">
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="text-lg font-bold text-slate-900">Recent System Activity</h2>
+              <button className="text-xs font-bold uppercase tracking-widest text-red-600 hover:text-red-700">View All</button>
+            </div>
+            
+            <div className="space-y-6">
+               {recentActivities.length === 0 ? (
+                  <p className="text-sm text-slate-400 italic">No recent activity detected.</p>
+               ) : (
+                  recentActivities.map((activity) => (
+                  <div key={activity.id} className="group flex items-start gap-4 rounded-2xl p-4 transition-colors hover:bg-slate-50">
+                     <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${activity.color}`}>
+                        <activity.icon size={18} />
+                     </div>
+                     <div className="flex-1">
+                        <p className="font-bold text-slate-900">{activity.message}</p>
+                        <p className="mt-1 text-xs font-medium text-slate-400">{activity.time}</p>
+                     </div>
+                     <button className="opacity-0 transition-opacity group-hover:opacity-100">
+                        <ArrowRight size={16} className="text-slate-400" />
+                     </button>
+                  </div>
+                  ))
+               )}
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="grid gap-6 sm:grid-cols-3">
+             <Link to="/dashboard/services" className="group rounded-[2rem] bg-gradient-to-br from-black to-slate-800 p-6 text-white shadow-lg transition-transform hover:-translate-y-1">
+               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm">
+                 <Package size={20} />
+               </div>
+               <h3 className="font-bold">Add Service</h3>
+               <p className="mt-1 text-xs text-slate-400">Launch new product offering</p>
+             </Link>
+             
+             <Link to="/dashboard/blogs" className="group rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-slate-100 transition-transform hover:-translate-y-1">
+               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
+                 <FileText size={20} />
+               </div>
+               <h3 className="font-bold text-slate-900">Write Post</h3>
+               <p className="mt-1 text-xs text-slate-500">Publish new blog article</p>
+             </Link>
+
+             <Link to="/dashboard/gallery" className="group rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-slate-100 transition-transform hover:-translate-y-1">
+               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                 <BarChart3 size={20} />
+               </div>
+               <h3 className="font-bold text-slate-900">Update Gallery</h3>
+               <p className="mt-1 text-xs text-slate-500">Refresh portfolio images</p>
+             </Link>
+          </div>
+        </div>
+
+        {/* Right Column - System Status */}
+        <div className="space-y-6">
+          <div className="rounded-[2.5rem] bg-slate-900 p-8 text-white shadow-xl h-full">
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="text-lg font-bold">Content Snapshot</h2>
+              <div className="flex h-2 w-2">
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                </span>
+              </div>
+            </div>
+            
+            <div className="space-y-6">
+              <Link to="/dashboard/gallery" className="flex items-center justify-between border-b border-white/10 pb-4 group hover:border-white/30 transition-colors">
+                <span className="text-sm font-medium text-slate-400 group-hover:text-white transition-colors">Gallery Images</span>
+                <span className="flex items-center gap-2 text-xs font-bold text-emerald-400">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                  {stats.totalGallery} Uploads
+                </span>
+              </Link>
+              <Link to="/dashboard/testimonials" className="flex items-center justify-between border-b border-white/10 pb-4 group hover:border-white/30 transition-colors">
+                <span className="text-sm font-medium text-slate-400 group-hover:text-white transition-colors">Testimonials</span>
+                <span className="flex items-center gap-2 text-xs font-bold text-blue-400">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-400"></span>
+                  {stats.totalTestimonials} Reviews
+                </span>
+              </Link>
+            </div>
+
+            <div className="mt-8 rounded-2xl bg-white/5 p-4 backdrop-blur-sm">
+              <div className="flex items-start gap-3">
+                <AlertCircle size={16} className="mt-0.5 text-blue-400" />
+                <div>
+                  <p className="text-xs font-bold text-white">Quick Tip</p>
+                  <p className="mt-1 text-[10px] leading-relaxed text-slate-400">
+                    Regularly updating your "Specials" keeps customers engaged. Try launching a new campaign for the upcoming month.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DashboardPage;

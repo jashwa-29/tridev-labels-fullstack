@@ -1,0 +1,446 @@
+🚀 Server running on port 5000
+✅ DB connected
+🔥 Server Error: Error: Not allowed by CORS
+    at origin (/root/aesthetic-backend/server.js:29:16)
+    at /root/aesthetic-backend/node_modules/cors/lib/index.js:219:13
+    at optionsCallback (/root/aesthetic-backend/node_modules/cors/lib/index.js:199:9)
+    at corsMiddleware (/root/aesthetic-backend/node_modules/cors/lib/index.js:204:7)
+    at Layer.handleRequest (/root/aesthetic-backend/node_modules/router/lib/layer.js:152:17)
+    at trimPrefix (/root/aesthetic-backend/node_modules/router/index.js:342:13)
+    at /root/aesthetic-backend/node_modules/router/index.js:297:9
+    at processParams (/root/aesthetic-backend/node_modules/router/index.js:582:12)
+    at next (/root/aesthetic-backend/node_modules/router/index.js:291:5)
+    at Function.handle (/root/aesthetic-backend/node_modules/router/index.js:186:3)
+🔥 Server Error: Error: Not allowed by CORS
+    at origin (/root/aesthetic-backend/server.js:29:16)
+    at /root/aesthetic-backend/node_modules/cors/lib/index.js:219:13
+    at optionsCallback (/root/aesthetic-backend/node_modules/cors/lib/index.js:199:9)
+    at corsMiddleware (/root/aesthetic-backend/node_modules/cors/lib/index.js:204:7)
+    at Layer.handleRequest (/root/aesthetic-backend/node_modules/router/lib/layer.js:152:17)
+    at trimPrefix (/root/aesthetic-backend/node_modules/router/index.js:342:13)
+    at /root/aesthetic-backend/node_modules/router/index.js:297:9
+    at processParams (/root/aesthetic-backend/node_modules/router/index.js:582:12)
+    at next (/root/aesthetic-backend/node_modules/router/index.js:291:5)
+    at Function.handle (/root/aesthetic-backend/node_modules/router/index.js:186:3)
+🚀 Server running on port 5000
+✅ DB connected
+🔥 Server Error: Error: Not allowed by CORS
+    at origin (/root/aesthetic-backend/server.js:29:16)
+    at /root/aesthetic-backend/node_modules/cors/lib/index.js:219:13
+    at optionsCallback (/root/aesthetic-backend/node_modules/cors/lib/index.js:199:9)
+    at corsMiddleware (/root/aesthetic-backend/node_modules/cors/lib/index.js:204:7)
+    at Layer.handleRequest (/root/aesthetic-backend/node_modules/router/lib/layer.js:152:17)
+    at trimPrefix (/root/aesthetic-backend/node_modules/router/index.js:342:13)
+    at /root/aesthetic-backend/node_modules/router/index.js:297:9
+    at processParams (/root/aesthetic-backend/node_modules/router/index.js:582:12)
+    at next (/root/aesthetic-backend/node_modules/router/index.js:291:5)
+    at Function.handle (/root/aesthetic-backend/node_modules/router/index.js:186:3)
+🔥 Server Error: Error: Not allowed by CORS
+    at origin (/root/aesthetic-backend/server.js:29:16)
+    at /root/aesthetic-backend/node_modules/cors/lib/index.js:219:13
+    at optionsCallback (/root/aesthetic-backend/node_modules/cors/lib/index.js:199:9)
+    at corsMiddleware (/root/aesthetic-backend/node_modules/cors/lib/index.js:204:7)
+    at Layer.handleRequest (/root/aesthetic-backend/node_modules/router/lib/layer.js:152:17)
+    at trimPrefix (/root/aesthetic-backend/node_modules/router/index.js:342:13)
+    at /root/aesthetic-backend/node_modules/router/index.js:297:9
+    at processParams (/root/aesthetic-backend/node_modules/router/index.js:582:12)
+    at next (/root/aesthetic-backend/node_modules/router/index.js:291:5)
+    at Function.handle (/root/aesthetic-backend/node_modules/router/index.js:186:3)
+🔗 Connecting to FTP server at ftp.aestheticstudio.in...
+Connected to 82.25.125.30:21 (No encryption)
+< 220 FTP Server ready.
+
+> OPTS UTF8 ON
+< 200 UTF8 set to on
+
+Login security: No encryption
+> USER u310924425
+< 331 Password required for u310924425
+
+> PASS ###
+< 230 User u310924425 logged in
+
+> FEAT
+< 211-Features:
+ AUTH TLS
+ CCC
+ CLNT
+ EPRT
+ EPSV
+
+<  HOST
+ LANG zh-CN;ru-RU;en-US;ko-KR;fr-FR;it-IT;zh-TW;ja-JP;bg-BG;es-ES
+ MDTM
+ MFF modify;UNIX.group;UNIX.mode;
+ MFMT
+ MLST modify*;perm*;size*;type*;unique*;UNIX.group*;UNIX.groupname*;UNIX.mode*;UNIX.owner*;UNIX.ownername*;
+ PBSZ
+ PROT
+ REST STREAM
+ SIZE
+ SSCN
+ TVFS
+ UTF8
+211 End
+
+> TYPE I
+< 200 Type set to I
+
+> STRU F
+< 200 Structure set to F
+
+> OPTS UTF8 ON
+< 200 UTF8 set to on
+
+> OPTS MLST type;size;modify;unique;unix.mode;unix.owner;unix.group;unix.ownername;unix.groupname;
+< 200 MLST OPTS type;size;modify;unique;UNIX.mode;UNIX.owner;UNIX.group;UNIX.ownername;UNIX.groupname;
+
+> PWD
+< 257 "/public_html" is the current directory
+
+📂 FTP current directory after login: /public_html
+📁 Ensuring remote directory exists: /domains/aestheticstudio.in/public_html/blog
+> CWD /
+< 250 CWD command successful
+
+> MKD domains
+< 550 domains: File exists
+
+> CWD domains
+< 250 CWD command successful
+
+> MKD aestheticstudio.in
+< 550 aestheticstudio.in: File exists
+
+> CWD aestheticstudio.in
+< 250 CWD command successful
+
+> MKD public_html
+< 550 public_html: File exists
+
+> CWD public_html
+< 250 CWD command successful
+
+> MKD blog
+< 550 blog: File exists
+
+> CWD blog
+< 250 CWD command successful
+
+📝 Writing temporary HTML file: /root/aesthetic-backend/utils/qweqw.html
+⏫ Uploading HTML to Hostinger: /domains/aestheticstudio.in/public_html/blog/qweqw.html
+Trying to find optimal transfer strategy...
+> EPSV
+< 229 Entering Extended Passive Mode (|||2302|)
+
+Optimal transfer strategy found.
+> STOR /domains/aestheticstudio.in/public_html/blog/qweqw.html
+< 150 Opening BINARY mode data connection for /domains/aestheticstudio.in/public_html/blog/qweqw.html
+
+Uploading to 82.25.125.30:2302 (No encryption)
+< 226 Transfer complete
+
+✅ Upload complete: /domains/aestheticstudio.in/public_html/blog/qweqw.html
+🗑️ Deleted local temp file: /root/aesthetic-backend/utils/qweqw.html
+✅ staticHtmlPath saved to DB: qweqw.html
+> QUIT
+🔌 FTP connection closed
+🔗 Connecting to FTP server at ftp.aestheticstudio.in...
+Connected to 82.25.125.30:21 (No encryption)
+< 220 FTP Server ready.
+
+> OPTS UTF8 ON
+< 200 UTF8 set to on
+
+Login security: No encryption
+> USER u310924425
+< 331 Password required for u310924425
+
+> PASS ###
+< 230 User u310924425 logged in
+
+> FEAT
+< 211-Features:
+ AUTH TLS
+ CCC
+ CLNT
+ EPRT
+ EPSV
+ HOST
+ LANG zh-CN;ru-RU;en-US;ko-KR;fr-FR;it-IT;zh-TW;ja-JP;bg-BG;es-ES
+
+<  MDTM
+ MFF modify;UNIX.group;UNIX.mode;
+ MFMT
+ MLST modify*;perm*;size*;type*;unique*;UNIX.group*;UNIX.groupname*;UNIX.mode*;UNIX.owner*;UNIX.ownername*;
+ PBSZ
+ PROT
+ REST STREAM
+ SIZE
+ SSCN
+ TVFS
+ UTF8
+211 End
+
+> TYPE I
+< 200 Type set to I
+
+> STRU F
+< 200 Structure set to F
+
+> OPTS UTF8 ON
+< 200 UTF8 set to on
+
+> OPTS MLST type;size;modify;unique;unix.mode;unix.owner;unix.group;unix.ownername;unix.groupname;
+< 200 MLST OPTS type;size;modify;unique;UNIX.mode;UNIX.owner;UNIX.group;UNIX.ownername;UNIX.groupname;
+
+> PWD
+< 257 "/public_html" is the current directory
+
+📂 FTP current directory after login: /public_html
+📁 Ensuring remote directory exists: /domains/aestheticstudio.in/public_html/blog
+> CWD /
+< 250 CWD command successful
+
+> MKD domains
+< 550 domains: File exists
+
+> CWD domains
+< 250 CWD command successful
+
+> MKD aestheticstudio.in
+< 550 aestheticstudio.in: File exists
+
+> CWD aestheticstudio.in
+< 250 CWD command successful
+
+> MKD public_html
+< 550 public_html: File exists
+
+> CWD public_html
+< 250 CWD command successful
+
+> MKD blog
+< 550 blog: File exists
+
+> CWD blog
+< 250 CWD command successful
+
+📝 Writing temporary HTML file: /root/aesthetic-backend/utils/asian-rhinoplasty-los-angeles.html
+⏫ Uploading HTML to Hostinger: /domains/aestheticstudio.in/public_html/blog/asian-rhinoplasty-los-angeles.html
+Trying to find optimal transfer strategy...
+> EPSV
+< 229 Entering Extended Passive Mode (|||2328|)
+
+Optimal transfer strategy found.
+> STOR /domains/aestheticstudio.in/public_html/blog/asian-rhinoplasty-los-angeles.html
+< 150 Opening BINARY mode data connection for /domains/aestheticstudio.in/public_html/blog/asian-rhinoplasty-los-angeles.html
+
+Uploading to 82.25.125.30:2328 (No encryption)
+< 226 Transfer complete
+
+✅ Upload complete: /domains/aestheticstudio.in/public_html/blog/asian-rhinoplasty-los-angeles.html
+🗑️ Deleted local temp file: /root/aesthetic-backend/utils/asian-rhinoplasty-los-angeles.html
+✅ staticHtmlPath saved to DB: asian-rhinoplasty-los-angeles.html
+> QUIT
+🔌 FTP connection closed
+🔗 Connecting to FTP server at ftp.aestheticstudio.in...
+Connected to 82.25.125.30:21 (No encryption)
+< 220 FTP Server ready.
+
+> OPTS UTF8 ON
+< 200 UTF8 set to on
+
+Login security: No encryption
+> USER u310924425
+< 331 Password required for u310924425
+
+> PASS ###
+< 230 User u310924425 logged in
+
+> FEAT
+< 211-Features:
+ AUTH TLS
+ CCC
+
+<  CLNT
+ EPRT
+ EPSV
+ HOST
+ LANG zh-CN;ru-RU;en-US;ko-KR;fr-FR;it-IT;zh-TW;ja-JP;bg-BG;es-ES
+ MDTM
+ MFF modify;UNIX.group;UNIX.mode;
+ MFMT
+ MLST modify*;perm*;size*;type*;unique*;UNIX.group*;UNIX.groupname*;UNIX.mode*;UNIX.owner*;UNIX.ownername*;
+ PBSZ
+ PROT
+ REST STREAM
+ SIZE
+ SSCN
+ TVFS
+ UTF8
+211 End
+
+> TYPE I
+< 200 Type set to I
+
+> STRU F
+< 200 Structure set to F
+
+> OPTS UTF8 ON
+< 200 UTF8 set to on
+
+> OPTS MLST type;size;modify;unique;unix.mode;unix.owner;unix.group;unix.ownername;unix.groupname;
+< 200 MLST OPTS type;size;modify;unique;UNIX.mode;UNIX.owner;UNIX.group;UNIX.ownername;UNIX.groupname;
+
+> PWD
+< 257 "/public_html" is the current directory
+
+📂 FTP current directory after login: /public_html
+📁 Ensuring remote directory exists: /domains/aestheticstudio.in/public_html/blog
+> CWD /
+< 250 CWD command successful
+
+> MKD domains
+< 550 domains: File exists
+
+> CWD domains
+< 250 CWD command successful
+
+> MKD aestheticstudio.in
+< 550 aestheticstudio.in: File exists
+
+> CWD aestheticstudio.in
+< 250 CWD command successful
+
+> MKD public_html
+< 550 public_html: File exists
+
+> CWD public_html
+< 250 CWD command successful
+
+> MKD blog
+< 550 blog: File exists
+
+> CWD blog
+< 250 CWD command successful
+
+📝 Writing temporary HTML file: /root/aesthetic-backend/utils/lower-eyelid-surgery.html
+⏫ Uploading HTML to Hostinger: /domains/aestheticstudio.in/public_html/blog/lower-eyelid-surgery.html
+Trying to find optimal transfer strategy...
+> EPSV
+< 229 Entering Extended Passive Mode (|||2351|)
+
+Optimal transfer strategy found.
+> STOR /domains/aestheticstudio.in/public_html/blog/lower-eyelid-surgery.html
+< 150 Opening BINARY mode data connection for /domains/aestheticstudio.in/public_html/blog/lower-eyelid-surgery.html
+
+Uploading to 82.25.125.30:2351 (No encryption)
+< 226 Transfer complete
+
+✅ Upload complete: /domains/aestheticstudio.in/public_html/blog/lower-eyelid-surgery.html
+🗑️ Deleted local temp file: /root/aesthetic-backend/utils/lower-eyelid-surgery.html
+✅ staticHtmlPath saved to DB: lower-eyelid-surgery.html
+> QUIT
+🔌 FTP connection closed
+🔗 Connecting to FTP server at ftp.aestheticstudio.in...
+Connected to 82.25.125.30:21 (No encryption)
+< 220 FTP Server ready.
+
+> OPTS UTF8 ON
+< 200 UTF8 set to on
+
+Login security: No encryption
+> USER u310924425
+< 331 Password required for u310924425
+
+> PASS ###
+< 230 User u310924425 logged in
+
+> FEAT
+< 211-Features:
+ AUTH TLS
+ CCC
+ CLNT
+ EPRT
+ EPSV
+ HOST
+ LANG zh-CN;ru-RU;en-US;ko-KR;fr-FR;it-IT;zh-TW;ja-JP;bg-BG;es-ES
+ MDTM
+ MFF modify;UNIX.group;UNIX.mode;
+
+<  MFMT
+ MLST modify*;perm*;size*;type*;unique*;UNIX.group*;UNIX.groupname*;UNIX.mode*;UNIX.owner*;UNIX.ownername*;
+ PBSZ
+ PROT
+ REST STREAM
+ SIZE
+ SSCN
+ TVFS
+ UTF8
+211 End
+
+> TYPE I
+< 200 Type set to I
+
+> STRU F
+< 200 Structure set to F
+
+> OPTS UTF8 ON
+< 200 UTF8 set to on
+
+> OPTS MLST type;size;modify;unique;unix.mode;unix.owner;unix.group;unix.ownername;unix.groupname;
+< 200 MLST OPTS type;size;modify;unique;UNIX.mode;UNIX.owner;UNIX.group;UNIX.ownername;UNIX.groupname;
+
+> PWD
+< 257 "/public_html" is the current directory
+
+📂 FTP current directory after login: /public_html
+📁 Ensuring remote directory exists: /domains/aestheticstudio.in/public_html/blog
+> CWD /
+< 250 CWD command successful
+
+> MKD domains
+< 550 domains: File exists
+
+> CWD domains
+< 250 CWD command successful
+
+> MKD aestheticstudio.in
+< 550 aestheticstudio.in: File exists
+
+> CWD aestheticstudio.in
+< 250 CWD command successful
+
+> MKD public_html
+< 550 public_html: File exists
+
+> CWD public_html
+< 250 CWD command successful
+
+> MKD blog
+< 550 blog: File exists
+
+> CWD blog
+< 250 CWD command successful
+
+📝 Writing temporary HTML file: /root/aesthetic-backend/utils/qweqw.html
+⏫ Uploading HTML to Hostinger: /domains/aestheticstudio.in/public_html/blog/qweqw.html
+Trying to find optimal transfer strategy...
+> EPSV
+< 229 Entering Extended Passive Mode (|||2334|)
+
+Optimal transfer strategy found.
+> STOR /domains/aestheticstudio.in/public_html/blog/qweqw.html
+< 150 Opening BINARY mode data connection for /domains/aestheticstudio.in/public_html/blog/qweqw.html
+
+Uploading to 82.25.125.30:2334 (No encryption)
+< 226 Transfer complete
+
+✅ Upload complete: /domains/aestheticstudio.in/public_html/blog/qweqw.html
+🗑️ Deleted local temp file: /root/aesthetic-backend/utils/qweqw.html
+✅ staticHtmlPath saved to DB: qweqw.html
+> QUIT
+🔌 FTP connection closed
+🚀 Server running on port 5000
+✅ DB connected
