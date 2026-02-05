@@ -9,7 +9,7 @@ export const getImgUrl = (path) => {
   // Get base backend URL from env or fallback to localhost
   const backendBaseUrl = process.env.NEXT_PUBLIC_API_URL 
     ? process.env.NEXT_PUBLIC_API_URL.replace('/api', '') 
-    : 'http://localhost:5000';
+    : 'https://tridev-labels-fullstack.onrender.com';
     
   // Ensure path starts with /
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
