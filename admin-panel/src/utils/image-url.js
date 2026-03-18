@@ -13,8 +13,8 @@
 export const getImgUrl = (path) => {
   if (!path || typeof path !== 'string') return null;
   
-  // 1. If it's already a full URL or a data URL, return it as-is
-  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
+  // 1. If it's already a full URL or a data/blob URL, return it as-is
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:') || path.startsWith('blob:')) {
     return path;
   }
   

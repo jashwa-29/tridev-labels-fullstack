@@ -13,7 +13,7 @@ const values = [
     icon: <Shield className="w-6 h-6" />,
     title: "Trusted",
     num: "01",
-    desc: "Built on an unwavering commitment to solve the most complex branding challenges. Trust is our substrate."
+    desc: "Built on relationships and the continued trust of our customers. Trust is the substrate of everything we produce."
   },
   {
     icon: <Zap className="w-6 h-6" />,
@@ -85,8 +85,8 @@ export default function AboutValues() {
               <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-gray-400">Institutional DNA</span>
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-7xl font-light text-white mb-8 leading-tight tracking-tighter">
-              Architectural Foundations <br />
-              <span className="font-medium text-[#E32219]">of Global Scale.</span>
+              Built on Trust, <br />
+              <span className="font-medium text-[#E32219]">Grown with Commitment.</span>
             </h2>
           </div>
         </div>

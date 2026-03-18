@@ -46,7 +46,10 @@ exports.createService = asyncHandler(async (req, res, next) => {
     specs,
     applications,
     order,
-    isActive
+    isActive,
+    heroImageAlt,
+    cardImageAlt,
+    metaDescription
   } = req.body;
 
   let heroImage = '';
@@ -66,10 +69,7 @@ exports.createService = asyncHandler(async (req, res, next) => {
   if (req.files) {
     req.files.forEach(file => {
       const normalizedPath = file.path.replace(/\\/g, '/');
-      // Store ONLY the relative path, not the full URL
       const relativePath = normalizedPath;
-
-      console.log(`Processing file: ${file.fieldname}, Relative Path: ${relativePath}`);
 
       if (file.fieldname === 'heroImage') {
         heroImage = relativePath;
@@ -79,23 +79,35 @@ exports.createService = asyncHandler(async (req, res, next) => {
         const index = parseInt(file.fieldname.split('_')[1]);
         if (!isNaN(index) && parsedSubProducts[index]) {
           parsedSubProducts[index].image = relativePath;
-          console.log(`Successfully assigned image path to subProducts[${index}]`);
-        } else {
-          console.log(`Failed to assign image to subProducts[${index}]. Array length: ${parsedSubProducts.length}`);
+        }
+      } else if (file.fieldname.startsWith('subProductGallery_')) {
+        const parts = file.fieldname.split('_');
+        const index = parseInt(parts[1]);
+        const imgIndex = parseInt(parts[2]);
+        if (!isNaN(index) && parsedSubProducts[index]) {
+          if (!parsedSubProducts[index].gallery) parsedSubProducts[index].gallery = [];
+          parsedSubProducts[index].gallery[imgIndex] = relativePath;
         }
       } else if (file.fieldname.startsWith('sectionImage_')) {
         const index = parseInt(file.fieldname.split('_')[1]);
         if (!isNaN(index) && parsedSections[index]) {
           parsedSections[index].image = relativePath;
-          console.log(`Successfully assigned image path to sections[${index}]`);
-        } else {
-          console.log(`Failed to assign image to sections[${index}]. Array length: ${parsedSections.length}`);
         }
       }
     });
   }
 
-  console.log('Final subProducts before save:', JSON.stringify(parsedSubProducts.map(p => ({ title: p.title, hasImage: !!p.image })), null, 2));
+  // Generate slugs for sub-products
+  if (Array.isArray(parsedSubProducts)) {
+    parsedSubProducts = parsedSubProducts.map(sp => {
+      if (sp.title && !sp.slug) {
+        sp.slug = sp.title.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-');
+      }
+      // Ensure gallery is a clean array (removing any possible nulls from indexed assignment)
+      if (sp.gallery) sp.gallery = sp.gallery.filter(img => img != null);
+      return sp;
+    });
+  }
 
   // Auto-assign order based on existing services count
   const servicesCount = await Service.countDocuments();
@@ -104,8 +116,11 @@ exports.createService = asyncHandler(async (req, res, next) => {
     title,
     subtitle,
     description,
+    metaDescription,
     heroImage,
+    heroImageAlt,
     cardImage,
+    cardImageAlt,
     subProducts: parsedSubProducts,
     specs: parseJSON(specs, []),
     applications: Array.isArray(applications) ? applications : parseJSON(applications, []),
@@ -151,32 +166,31 @@ exports.updateService = asyncHandler(async (req, res, next) => {
     specs,
     applications,
     order,
-    isActive
+    isActive,
+    heroImageAlt,
+    cardImageAlt,
+    metaDescription
   } = req.body;
 
   // Log for debugging
-  console.log('--- Update Service Debug ---');
-  console.log('Body keys:', Object.keys(req.body));
-  console.log('Raw subProducts string:', subProducts);
-
+  const fs = require('fs');
+  const logData = `--- Update Service Debug (ID: ${req.params.id}) ---\n` +
+                  `Time: ${new Date().toISOString()}\n` +
+                  `Body Keys: ${Object.keys(req.body).join(', ')}\n` +
+                  `Raw subProducts: ${subProducts ? subProducts.substring(0, 500) + '...' : 'N/A'}\n`;
+  fs.appendFileSync('debug_update.log', logData);
+  
   let parsedSubProducts = subProducts ? parseJSON(subProducts, service.subProducts) : service.subProducts;
   let parsedSections = req.body.sections ? parseJSON(req.body.sections, service.sections) : service.sections;
   
-  if (typeof parsedSubProducts.toObject === 'function') {
-    parsedSubProducts = parsedSubProducts.toObject();
-  } else if (Array.isArray(parsedSubProducts)) {
+  if (Array.isArray(parsedSubProducts)) {
+    fs.appendFileSync('debug_update.log', `Parsed subProducts count: ${parsedSubProducts.length}\n`);
+    if (parsedSubProducts.length > 0) {
+      fs.appendFileSync('debug_update.log', `Sample [0] keys: ${Object.keys(parsedSubProducts[0]).join(', ')}\n`);
+      fs.appendFileSync('debug_update.log', `Sample [0] fullDescription length: ${parsedSubProducts[0].fullDescription ? parsedSubProducts[0].fullDescription.length : 'N/A'}\n`);
+    }
     parsedSubProducts = parsedSubProducts.map(p => typeof p.toObject === 'function' ? p.toObject() : p);
   }
-
-  if (typeof parsedSections.toObject === 'function') {
-    parsedSections = parsedSections.toObject();
-  } else if (Array.isArray(parsedSections)) {
-    parsedSections = parsedSections.map(s => typeof s.toObject === 'function' ? s.toObject() : s);
-  }
-
-  console.log('Final Parsed subProducts count:', parsedSubProducts.length);
-  console.log('Final Parsed sections count:', parsedSections.length);
-  console.log('Files received:', req.files ? req.files.map(f => f.fieldname) : 'none');
 
   if (req.files) {
     req.files.forEach(file => {
@@ -201,38 +215,58 @@ exports.updateService = asyncHandler(async (req, res, next) => {
       } else if (file.fieldname.startsWith('subProductImage_')) {
         const index = parseInt(file.fieldname.split('_')[1]);
         if (!isNaN(index) && parsedSubProducts[index]) {
-          // Delete old sub-product image if it exists
           const oldSubProduct = service.subProducts[index];
           if (oldSubProduct && oldSubProduct.image && oldSubProduct.image.includes('uploads/')) {
             deleteLocalFile(path.join(__dirname, '..', oldSubProduct.image));
           }
           parsedSubProducts[index].image = relativePath;
-          console.log(`Successfully updated image path for subProducts[${index}]`);
-        } else {
-          console.log(`Failed to update image for subProducts[${index}]. Array length: ${parsedSubProducts.length}`);
+        }
+      } else if (file.fieldname.startsWith('subProductGallery_')) {
+        const parts = file.fieldname.split('_');
+        const index = parseInt(parts[1]);
+        const imgIndex = parseInt(parts[2]);
+        if (!isNaN(index) && parsedSubProducts[index]) {
+          if (!parsedSubProducts[index].gallery) parsedSubProducts[index].gallery = [];
+          
+          // Cleanup old image if we are replacing it at this specific index
+          const oldGallery = service.subProducts[index]?.gallery;
+          if (oldGallery && oldGallery[imgIndex] && oldGallery[imgIndex].includes('uploads/')) {
+            deleteLocalFile(path.join(__dirname, '..', oldGallery[imgIndex]));
+          }
+          
+          parsedSubProducts[index].gallery[imgIndex] = relativePath;
         }
       } else if (file.fieldname.startsWith('sectionImage_')) {
         const index = parseInt(file.fieldname.split('_')[1]);
         if (!isNaN(index) && parsedSections[index]) {
-          // Delete old section image if it exists
           const oldSection = service.sections[index];
           if (oldSection && oldSection.image && oldSection.image.includes('uploads/')) {
             deleteLocalFile(path.join(__dirname, '..', oldSection.image));
           }
           parsedSections[index].image = relativePath;
-          console.log(`Successfully updated image path for sections[${index}]`);
-        } else {
-          console.log(`Failed to update image for sections[${index}]. Array length: ${parsedSections.length}`);
         }
       }
     });
   }
 
-  console.log('Final subProducts before update:', JSON.stringify(parsedSubProducts.map(p => ({ title: p.title, hasImage: !!p.image })), null, 2));
+  // Ensure slugs for sub-products on update
+  if (Array.isArray(parsedSubProducts)) {
+    parsedSubProducts = parsedSubProducts.map(sp => {
+      if (sp.title && !sp.slug) {
+        sp.slug = sp.title.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-');
+      }
+      // Clean up gallery array
+      if (sp.gallery) sp.gallery = sp.gallery.filter(img => img != null);
+      return sp;
+    });
+  }
 
   if (title) service.title = title;
   if (subtitle) service.subtitle = subtitle;
   if (description) service.description = description;
+  if (metaDescription) service.metaDescription = metaDescription;
+  if (heroImageAlt !== undefined) service.heroImageAlt = heroImageAlt;
+  if (cardImageAlt !== undefined) service.cardImageAlt = cardImageAlt;
   if (subProducts) {
     service.subProducts = parsedSubProducts;
     service.markModified('subProducts');
@@ -266,7 +300,9 @@ exports.updateService = asyncHandler(async (req, res, next) => {
   if (order !== undefined) service.order = parseInt(order);
   if (isActive !== undefined) service.isActive = isActive === 'true' || isActive === true;
 
+  console.log('Finalizing save for service: ' + service.title);
   await service.save();
+  console.log('--- Update Service Success (ID: ' + service._id + ') ---');
 
   res.status(200).json({
     success: true,
@@ -290,6 +326,9 @@ exports.deleteService = asyncHandler(async (req, res, next) => {
   if (service.subProducts) {
     service.subProducts.forEach(sp => {
       if (sp.image) imagesToDelete.push(sp.image);
+      if (sp.gallery && Array.isArray(sp.gallery)) {
+        sp.gallery.forEach(img => imagesToDelete.push(img));
+      }
     });
   }
 

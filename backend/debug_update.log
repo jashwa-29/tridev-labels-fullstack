@@ -1,0 +1,105 @@
+--- Update Service Debug (ID: 6982e70abbef04aa4050b1bf) ---
+Time: 2026-02-12T08:39:35.009Z
+Body Keys: isActive, title, subtitle, description, subProducts, specs, applications, sections, faqs, category, tags, layout, extraContent
+Raw subProducts: [{"features":["High-density barcode compatibility (Linear & 2D/QR)","Superior smudge and scratch resistance","Permanent acrylic adhesive for corrugated surfaces"],"applications":[],"gallery":[],"title":"Barcode Labels","desc":"High-precision scannable labels for global inventory and asset tracking.","image":"uploads/services/subProductImage_0-1770207740494-242186657.jpg","_id":"6982e70abbef04aa4050b1c0","specifications":[{"label":"Base Material","value":"Semi-Gloss Chromo / 50-micron PET"},{"lab...
+Parsed subProducts count: 7
+Sample [0] keys: features, applications, gallery, title, desc, image, _id, specifications, fullDescription
+Sample [0] fullDescription length: 962
+--- Update Service Debug (ID: 6982e70abbef04aa4050b1bf) ---
+Time: 2026-02-12T09:07:30.632Z
+Body Keys: isActive, title, subtitle, description, subProducts, specs, applications, sections, faqs, category, tags, layout, extraContent
+Raw subProducts: [{"title":"Barcode Labels","slug":"barcode-labels","desc":"High-precision scannable labels for global inventory and asset tracking.","fullDescription":"<p>Engineered for high-speed logistics and automated scanning systems, our barcode labels utilize premium semi-gloss chromo and polyester substrates. They are optimized for 600 DPI thermal transfer printing, ensuring that every barcode maintains sharp edges and high contrast for flawless global scanning.</p><ul><li><br></li></ul>","features":["Hi...
+Parsed subProducts count: 7
+Sample [0] keys: title, slug, desc, fullDescription, features, specifications, applications, image, gallery, _id
+Sample [0] fullDescription length: 331
+--- Update Service Debug (ID: 6982e70abbef04aa4050b1bf) ---
+Time: 2026-02-12T09:13:45.703Z
+Body Keys: isActive, title, subtitle, description, subProducts, specs, applications, sections, faqs, category, tags, layout, extraContent
+Raw subProducts: [{"benefits":[],"title":"Barcode Labels","slug":"barcode-labels","desc":"High-precision scannable labels for global inventory and asset tracking.","fullDescription":"<p>Engineered for high-speed logistics and automated scanning systems, our barcode labels utilize premium semi-gloss chromo and polyester substrates. They are optimized for 600 DPI thermal transfer printing, ensuring that every barcode maintains sharp edges and high contrast for flawless global scanning.</p><p><strong>Core Tech:</st...
+Parsed subProducts count: 7
+Sample [0] keys: benefits, title, slug, desc, fullDescription, features, specifications, applications, image, gallery, _id, faqs, sections
+Sample [0] fullDescription length: 1214
+--- Update Service Debug (ID: 6982e70abbef04aa4050b1bf) ---
+Time: 2026-02-12T09:14:43.324Z
+Body Keys: isActive, title, subtitle, description, subProducts, specs, applications, sections, faqs, category, tags, layout, extraContent
+Raw subProducts: [{"title":"Barcode Labels","slug":"barcode-labels","desc":"High-precision scannable labels for global inventory and asset tracking.","fullDescription":"<p>Engineered for high-speed logistics and automated scanning systems, our barcode labels utilize premium semi-gloss chromo and polyester substrates. They are optimized for 600 DPI thermal transfer printing, ensuring that every barcode maintains sharp edges and high contrast for flawless global scanning.</p><p><strong>Core Tech:</strong>&nbsp;Reg...
+Parsed subProducts count: 7
+Sample [0] keys: title, slug, desc, fullDescription, features, specifications, applications, benefits, faqs, sections, image, gallery, _id
+Sample [0] fullDescription length: 1203
+--- Update Service Debug (ID: 6982e70abbef04aa4050b1bf) ---
+Time: 2026-02-12T10:20:04.384Z
+Body Keys: isActive, title, subtitle, description, subProducts, specs, applications, sections, faqs, category, tags, layout, extraContent
+Raw subProducts: [{"title":"Barcode Labels","slug":"barcode-labels","desc":"High-precision scannable labels for global inventory and asset tracking.","fullDescription":"<p>Engineered for high-speed logistics and automated scanning systems, our barcode labels utilize premium semi-gloss chromo and polyester substrates. They are optimized for 600 DPI thermal transfer printing, ensuring that every barcode maintains sharp edges and high contrast for flawless global scanning.</p><p><strong>Core Tech:</strong>&nbsp;Reg...
+Parsed subProducts count: 7
+Sample [0] keys: title, slug, desc, fullDescription, features, specifications, applications, benefits, faqs, sections, image, gallery, _id, subtitle
+Sample [0] fullDescription length: 1203
+--- Update Service Debug (ID: 6982e70abbef04aa4050b1bf) ---
+Time: 2026-02-12T10:23:39.894Z
+Body Keys: isActive, title, subtitle, description, subProducts, specs, applications, sections, faqs, category, tags, layout, extraContent
+Raw subProducts: [{"title":"Barcode Labels","slug":"barcode-labels","subtitle":"hfdy  jhbkbjgk   gvvijhbbo   iuh ","desc":"High-precision scannable labels for global inventory and asset tracking.","fullDescription":"<p>Engineered for high-speed logistics and automated scanning systems, our barcode labels utilize premium semi-gloss chromo and polyester substrates. They are optimized for 600 DPI thermal transfer printing, ensuring that every barcode maintains sharp edges and high contrast for flawless global scann...
+Parsed subProducts count: 7
+Sample [0] keys: title, slug, subtitle, desc, fullDescription, features, specifications, applications, benefits, faqs, sections, image, gallery, _id
+Sample [0] fullDescription length: 1203
+--- Update Service Debug (ID: 6982e70abbef04aa4050b1cb) ---
+Time: 2026-02-12T11:33:10.208Z
+Body Keys: isActive, title, subtitle, description, subProducts, specs, applications, sections, faqs, category, tags, layout, extraContent
+Raw subProducts: [{"features":[],"applications":[],"benefits":[],"gallery":[],"title":"Reverse Side Printed Labels","desc":"Graphics protected under the surface for extreme abrasion resistance.","image":"uploads/services/subProductImage_0-1770207233588-225270858.jpg","_id":"6982e70abbef04aa4050b1cc","specifications":[],"faqs":[],"sections":[],"subtitle":"","fullDescription":""},{"features":[],"applications":[],"benefits":[],"gallery":[],"title":"Polycarbonate Labels & Overlays","desc":"Durable overlays for contr...
+Parsed subProducts count: 7
+Sample [0] keys: features, applications, benefits, gallery, title, desc, image, _id, specifications, faqs, sections, subtitle, fullDescription
+Sample [0] fullDescription length: N/A
+--- Update Service Debug (ID: 6982e70abbef04aa4050b1cb) ---
+Time: 2026-02-12T11:37:49.372Z
+Body Keys: isActive, title, subtitle, description, subProducts, specs, applications, sections, faqs, category, tags, layout, extraContent
+Raw subProducts: [{"title":"Reverse Side Printed Labels","slug":"reverse-side-printed-labels","subtitle":"","desc":"Graphics protected under the surface for extreme abrasion resistance.","fullDescription":"","features":[],"specifications":[],"applications":[],"benefits":[],"faqs":[],"sections":[],"image":"uploads/services/subProductImage_0-1770207233588-225270858.jpg","gallery":[],"_id":"6982e70abbef04aa4050b1cc"},{"title":"Polycarbonate Labels & Overlays","slug":"polycarbonate-labels-overlays","subtitle":"","de...
+Parsed subProducts count: 7
+Sample [0] keys: title, slug, subtitle, desc, fullDescription, features, specifications, applications, benefits, faqs, sections, image, gallery, _id
+Sample [0] fullDescription length: N/A
+--- Update Service Debug (ID: 6982e70abbef04aa4050b1e7) ---
+Time: 2026-02-12T11:47:11.332Z
+Body Keys: isActive, title, subtitle, description, subProducts, specs, applications, sections, faqs, category, tags, layout, extraContent
+Raw subProducts: [{"features":[],"applications":[],"benefits":[],"gallery":[],"title":"Freezer Proof Labels","desc":"Adhesives that perform reliably in sub-zero storage conditions.","image":"uploads/services/subProductImage_0-1770207781839-146989468.jpg","_id":"6982e70abbef04aa4050b1e8","specifications":[],"faqs":[],"sections":[],"subtitle":"","fullDescription":""},{"features":[],"applications":[],"benefits":[],"gallery":[],"title":"Juice Bottle Labels","desc":"Vibrant, moisture-resistant labels for juice and be...
+Parsed subProducts count: 3
+Sample [0] keys: features, applications, benefits, gallery, title, desc, image, _id, specifications, faqs, sections, subtitle, fullDescription
+Sample [0] fullDescription length: N/A
+--- Update Service Debug (ID: 6982e70abbef04aa4050b1bf) ---
+Time: 2026-02-12T12:01:21.062Z
+Body Keys: isActive, title, subtitle, description, subProducts, specs, applications, sections, faqs, category, tags, layout, extraContent, heroImageAlt, cardImageAlt
+Raw subProducts: [{"title":"Barcode Labels","slug":"barcode-labels","subtitle":"hfdy  jhbkbjgk   gvvijhbbo   iuh ","desc":"High-precision scannable labels for global inventory and asset tracking.","fullDescription":"<p>Engineered for high-speed logistics and automated scanning systems, our barcode labels utilize premium semi-gloss chromo and polyester substrates. They are optimized for 600 DPI thermal transfer printing, ensuring that every barcode maintains sharp edges and high contrast for flawless global scann...
+Parsed subProducts count: 7
+Sample [0] keys: title, slug, subtitle, desc, fullDescription, features, specifications, applications, benefits, faqs, sections, image, gallery, _id, imageAlt
+Sample [0] fullDescription length: 1203
+--- Update Service Debug (ID: 6982e70abbef04aa4050b1d7) ---
+Time: 2026-02-13T09:16:20.930Z
+Body Keys: isActive, title, subtitle, description, metaDescription, subProducts, specs, applications, sections, faqs, category, tags, layout, extraContent, heroImageAlt, cardImageAlt
+Raw subProducts: [{"features":[],"applications":[],"benefits":[],"gallery":[],"title":"Tyre Labels","desc":"Aggressive adhesives designed to stick to rough rubber surfaces.","image":"uploads/services/subProductImage_0-1770207418205-93854344.jpg","_id":"6982e70abbef04aa4050b1d8","specifications":[],"faqs":[],"sections":[],"subtitle":"","fullDescription":""},{"features":[],"applications":[],"benefits":[],"gallery":[],"title":"Asset Tracking Labels","desc":"Heavy-duty tracking for machinery and industrial assets.",...
+Parsed subProducts count: 6
+Sample [0] keys: features, applications, benefits, gallery, title, desc, image, _id, specifications, faqs, sections, subtitle, fullDescription
+Sample [0] fullDescription length: N/A
+--- Update Service Debug (ID: 6982e70abbef04aa4050b1bf) ---
+Time: 2026-02-13T11:15:05.986Z
+Body Keys: isActive, title, subtitle, description, metaDescription, subProducts, specs, applications, sections, faqs, category, tags, layout, extraContent, heroImageAlt, cardImageAlt
+Raw subProducts: [{"title":"Barcode Labels","slug":"barcode-labels","subtitle":"hfdy  jhbkbjgk   gvvijhbbo   iuh ","desc":"High-precision scannable labels for global inventory and asset tracking.","fullDescription":"<p>Engineered for high-speed logistics and automated scanning systems, our barcode labels utilize premium semi-gloss chromo and polyester substrates. They are optimized for 600 DPI thermal transfer printing, ensuring that every barcode maintains sharp edges and high contrast for flawless global scann...
+Parsed subProducts count: 7
+Sample [0] keys: title, slug, subtitle, desc, fullDescription, features, specifications, applications, benefits, faqs, sections, image, imageAlt, gallery, _id, metaTitle, metaDescription
+Sample [0] fullDescription length: 1203
+--- Update Service Debug (ID: 6982e70abbef04aa4050b1f2) ---
+Time: 2026-02-18T10:14:01.694Z
+Body Keys: isActive, title, subtitle, description, metaDescription, subProducts, specs, applications, sections, faqs, category, tags, layout, extraContent, heroImageAlt, cardImageAlt
+Raw subProducts: [{"features":[],"applications":[],"benefits":[],"gallery":[],"title":"Silver Void Labels","desc":"Leaves a visible 'VOID' pattern when removed to indicate tampering.","image":"uploads/services/subProductImage_0-1770207696522-620394018.jpg","_id":"6982e70abbef04aa4050b1f3","specifications":[],"faqs":[],"sections":[],"subtitle":"","fullDescription":"","metaTitle":"","metaDescription":""},{"features":[],"applications":[],"benefits":[],"gallery":[],"title":"UDV Labels","desc":"Ultra-Destructible Vin...
+Parsed subProducts count: 4
+Sample [0] keys: features, applications, benefits, gallery, title, desc, image, _id, specifications, faqs, sections, subtitle, fullDescription, metaTitle, metaDescription
+Sample [0] fullDescription length: N/A
+--- Update Service Debug (ID: 6982e70abbef04aa4050b1ed) ---
+Time: 2026-02-21T09:03:11.980Z
+Body Keys: isActive, title, subtitle, description, metaDescription, subProducts, specs, applications, sections, faqs, category, tags, layout, extraContent, heroImageAlt, cardImageAlt
+Raw subProducts: [{"features":[],"applications":[],"benefits":[],"gallery":[],"title":"Double Sided Printed Labels","desc":"Maximize information space with printing on both sides of the label.","image":"uploads/services/subProductImage_0-1770207790936-146532974.jpg","_id":"6982e70abbef04aa4050b1ee","specifications":[],"faqs":[],"sections":[],"subtitle":"as dasdasdasdaasdas","fullDescription":"<p>asdasdasdasd asd asd</p>","metaTitle":"asdasd asdasdasd","metaDescription":"asda sdasd"},{"features":[],"applications"...
+Parsed subProducts count: 2
+Sample [0] keys: features, applications, benefits, gallery, title, desc, image, _id, specifications, faqs, sections, subtitle, fullDescription, metaTitle, metaDescription
+Sample [0] fullDescription length: 27
+--- Update Service Debug (ID: 6982e70abbef04aa4050b1bf) ---
+Time: 2026-02-21T09:04:48.725Z
+Body Keys: isActive, title, subtitle, description, metaDescription, subProducts, specs, applications, sections, faqs, category, tags, layout, extraContent, heroImageAlt, cardImageAlt
+Raw subProducts: [{"title":"Barcode Labels","slug":"barcode-labels","subtitle":"hfdy  jhbkbjgk   gvvijhbbo   iuh ","desc":"High-precision scannable labels for global inventory and asset tracking.","fullDescription":"<p>Engineered for high-speed logistics and automated scanning systems, our barcode labels utilize premium semi-gloss chromo and polyester substrates. They are optimized for 600 DPI thermal transfer printing, ensuring that every barcode maintains sharp edges and high contrast for flawless global scann...
+Parsed subProducts count: 7
+Sample [0] keys: title, slug, subtitle, desc, fullDescription, metaTitle, metaDescription, features, specifications, applications, benefits, faqs, sections, image, imageAlt, gallery, _id
+Sample [0] fullDescription length: 1203

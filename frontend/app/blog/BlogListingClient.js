@@ -88,7 +88,7 @@ export default function BlogListingClient({ initialBlogs, initialPage, totalPage
                      <div className="relative aspect-16/10 overflow-hidden rounded-2xl bg-gray-50 shadow-xl shadow-black/3 mb-8">
                         <Image 
                           src={blog.featuredImage || "https://images.unsplash.com/photo-1557804506-669a67965ba0"} 
-                          alt={blog.title} 
+                          alt={blog.cardTitle || blog.title} 
                           fill
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                           className="object-cover brightness-95 group-hover:brightness-105 group-hover:scale-110 transition-all duration-1000"
@@ -114,7 +114,7 @@ export default function BlogListingClient({ initialBlogs, initialPage, totalPage
                        </div>
 
                        <h3 className="text-2xl md:text-3xl font-light text-gray-900 group-hover:text-[#E32219] transition-colors duration-400 mb-6 leading-tight tracking-tight line-clamp-2">
-                         {blog.title}
+                         {blog.cardTitle || blog.title}
                        </h3>
 
                        <p className="text-gray-500 font-light leading-relaxed mb-8 line-clamp-3 text-base flex-1">

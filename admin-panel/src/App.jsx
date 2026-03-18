@@ -15,7 +15,12 @@ import TestimonialsPage from "./routes/Pages/TestimonialsPage";
 import ForgotPasswordPage from "./routes/Pages/ForgotPasswordPage";
 import ResetPasswordPage from "./routes/Pages/ResetPasswordPage";
 import SettingsPage from "./routes/Pages/SettingsPage";
+import HistoryPage from "./routes/Pages/HistoryPage";
 import GlobalError from "./routes/Pages/GlobalError";
+import ManageAdminsPage from "./routes/Pages/ManageAdminsPage";
+import LiveChatPage from "./routes/Pages/LiveChatPage";
+import ChatHistoryPage from "./routes/Pages/ChatHistoryPage";
+import ChatSettingsPage from "./routes/Pages/ChatSettingsPage";
 
 function App() {
     const router = createBrowserRouter([
@@ -51,7 +56,12 @@ function App() {
                                 { path: "contact", element: <ContactPage /> },
                                 { path: "quotes", element: <QuotesPage /> },
                                 { path: "testimonials", element: <TestimonialsPage /> },
+                                { path: "history", element: <HistoryPage /> },
                                 { path: "settings", element: <SettingsPage /> },
+                                { path: "admins", element: <ManageAdminsPage /> },
+                                { path: "chat", element: <LiveChatPage /> },
+                                { path: "chat/history", element: <ChatHistoryPage /> },
+                                { path: "chat/settings", element: <ChatSettingsPage /> },
                             ],
                         },
                     ],

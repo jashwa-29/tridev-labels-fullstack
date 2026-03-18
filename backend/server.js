@@ -22,7 +22,7 @@ const errorHandler = require('./middleware/errorHandler');
 // Connect to database
 connectDB();
 
-// Route files
+// Route files   
 const authRoutes = require('./routes/authRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const galleryRoutes = require('./routes/galleryRoutes');
@@ -30,19 +30,28 @@ const specialsPromotionRoutes = require('./routes/specialsPromotionRoutes');
 const quoteRoutes = require('./routes/Quote.routes');
 const serviceRoutes = require('./routes/Service.routes');
 const testimonialRoutes = require('./routes/testimonialRoutes');
+const historyRoutes = require('./routes/historyRoutes');
+const chatRoutes = require('./routes/chatRoutes');
+const chatSettingRoutes = require('./routes/chatSettingRoutes');
+
+// Import http and socket.io
+const http = require('http');
+const { Server } = require('socket.io');
+const socketHandler = require('./socket'); 
 
 const app = express();   
+const server = http.createServer(app); // Create HTTP server
 
 // 1. CORS - MUST BE FIRST to handle preflight and headers
 const allowedOrigins = [
-  'https://www.aestheticstudio.in',   
+  'https://www.aestheticstudio.in',       
   'http://localhost:3000',
-  'http://localhost:4000',
+  'http://localhost:4000', 
   'http://localhost:4001',
-  'https://adminpanel.aestheticstudio.in',
+  'https://adminpanel.aestheticstudio.in',      
   'https://tridev-labels.vercel.app',
   'http://localhost:5173', 
-  'https://tridev-admin-panel.netlify.app'
+  'https://tridev-admin-panel.netlify.app'  
 ];    
 
 const corsOptions = {
@@ -56,6 +65,23 @@ const corsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));   
+
+// Initialize Socket.io
+const io = new Server(server, {
+  pingTimeout: 60000,  
+  cors: {
+    origin: allowedOrigins,                 
+    methods: ["GET", "POST"],      
+    credentials: true         
+  }
+});
+
+// Run Socket Logic
+socketHandler(io);
+
+// Start Automated Chat Cleanup (Closes chats inactive > 24h)
+const { startChatCleanupTask } = require('./utils/chatCleanup');
+startChatCleanupTask(io);
 
 // 2. Body Parser
 app.use(express.json({ limit: '50mb' }));
@@ -97,6 +123,9 @@ app.use('/api/specialsPromotions', specialsPromotionRoutes);
 app.use('/api/quotes', quoteRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/testimonials', testimonialRoutes);
+app.use('/api/history', historyRoutes);
+app.use('/api/chats', chatRoutes);
+app.use('/api/chat-settings', chatSettingRoutes);
 
 // Base route
 app.get('/', (req, res) => {
@@ -108,7 +137,8 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-const server = app.listen(PORT, () => {
+// Use server.listen instead of app.listen
+server.listen(PORT, () => {
   console.log(`🚀 Server running in ${process.env.NODE_ENV || 'production'} mode on port ${PORT}`.yellow.bold);
 });
 

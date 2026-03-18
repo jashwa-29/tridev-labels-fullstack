@@ -108,7 +108,7 @@ export default function ScrollToTop() {
       onClick={scrollToTop}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`fixed bottom-8 right-8 z-90 flex items-center justify-center pointer-events-auto opacity-0 translate-y-24`}
+      className={`fixed bottom-28 right-8 z-40 flex items-center justify-center pointer-events-auto opacity-0 translate-y-24`}
       aria-label="Scroll to top"
     >
       <div 

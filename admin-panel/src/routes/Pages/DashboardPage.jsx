@@ -11,7 +11,9 @@ import {
   Activity,
   Calendar,
   AlertCircle,
-  Loader2
+  Loader2,
+  Image as ImageIcon,
+  Zap
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { serviceService } from '../../services/service.service';
@@ -32,7 +34,7 @@ const DashboardPage = () => {
     totalTestimonials: 0,
     activeSpecials: 0
   });
-  const [recentLeads, setRecentLeads] = useState([]);
+  const [recentActivities, setRecentActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -45,9 +47,9 @@ const DashboardPage = () => {
         // Fetch data in parallel
         const [servicesRes, blogsRes, quotesRes, contactsRes, galleryRes, testimonialRes, specialRes] = await Promise.allSettled([
           serviceService.getAll(true),
-          blogService.getAll({ admin: true, limit: 1 }),
-          quoteService.getAll(1, 10, 'service'), 
-          quoteService.getAll(1, 10, 'contact'), 
+          blogService.getAll({ admin: true, limit: 5 }),
+          quoteService.getAll(1, 100, 'service'), // Fetch only service quotes
+          quoteService.getAll(1, 100, 'contact'), // Fetch contact form submissions
           galleryService.getAll(true),
           testimonialService.getAll(true),
           specialService.getAll(true)
@@ -58,42 +60,32 @@ const DashboardPage = () => {
         
         // Process Blogs
         const blogsResData = blogsRes.status === 'fulfilled' ? blogsRes.value : {};
-        const totalBlogsCount = blogsResData.count || (blogsResData.data ? blogsResData.data.length : 0);
+        const totalBlogsCount = blogsResData.total || (blogsResData.data ? blogsResData.data.length : 0);
 
-        // Process Quotes & Contacts for Leads Table
+        // Process Leads (Service Quotes + Contacts)
         const sQuotes = quotesRes.status === 'fulfilled' ? (quotesRes.value.data || []) : [];
-        const cMessages = contactsRes.status === 'fulfilled' ? (contactsRes.value.data || []) : [];
-        
-        const combinedLeads = [...sQuotes, ...cMessages]
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-          .slice(0, 5);
-        
-        setRecentLeads(combinedLeads);
+        const cQuotes = contactsRes.status === 'fulfilled' ? (contactsRes.value.data || []) : [];
+        const allLeads = [...sQuotes, ...cQuotes].sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-        // Process Stats
-        const recentQuotesCount = (quotesRes.status === 'fulfilled' ? (quotesRes.value.pagination?.total || quotesRes.value.total || quotesRes.value.data?.length) : 0) || 0;
-        const contactsCount = (contactsRes.status === 'fulfilled' ? (contactsRes.value.pagination?.total || contactsRes.value.total || contactsRes.value.data?.length) : 0) || 0;
-
+        // Process Others
         const galleryItems = galleryRes.status === 'fulfilled' ? (galleryRes.value.data || []) : [];
         const testimonials = testimonialRes.status === 'fulfilled' ? (testimonialRes.value.data || []) : [];
         const specials = specialRes.status === 'fulfilled' ? (specialRes.value.data && specialRes.value.data.data ? specialRes.value.data.data : (Array.isArray(specialRes.value.data) ? specialRes.value.data : [])) : [];
 
         setStats({
           totalServices: services.length,
-          contacts: contactsCount,
+          contacts: cQuotes.length,
           totalBlogs: totalBlogsCount,
-          recentInquiries: recentQuotesCount,
+          recentInquiries: sQuotes.length,
           totalGallery: galleryItems.length,
           totalTestimonials: testimonials.length,
-          activeSpecials: specials.length
+          activeSpecials: specials.length,
+          recentLeads: allLeads.slice(0, 5)
         });
-
-        // Activity Feed logic preserved for potential future use or debugging
-        // Removed setRecentActivities as it was causing ReferenceError
         
       } catch (err) {
         console.error("Failed to load dashboard data", err);
-        setError("Could not load dashboard data. Please try refreshing.");
+        setError("Management server connectivity issues. Retrying...");
       } finally {
         setLoading(false);
       }
@@ -143,8 +135,8 @@ const DashboardPage = () => {
       {/* Welcome Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 font-title">Management Protocol</h1>
-          <p className="mt-2 text-sm font-medium text-slate-500">Strategic overview of your label manufacturing ecosystem.</p>
+          <h1 className="text-3xl font-black text-slate-900 font-title">Admin Command Center</h1>
+          <p className="mt-2 text-sm font-medium text-slate-500">Welcome back, Administrator. Here's what's happening today.</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-xs font-bold text-slate-500 shadow-sm ring-1 ring-slate-100">
@@ -173,23 +165,25 @@ const DashboardPage = () => {
           link="/dashboard/services"
         />
         <StatCard 
-          title="Blog Engagement" 
+          title="Blog Posts" 
           value={stats.totalBlogs} 
           icon={FileText} 
           color="bg-blue-50" 
           link="/dashboard/blogs"
         />
         <StatCard 
-          title="Recent Leads" 
+          title="Recent Inquiries" 
           value={stats.recentInquiries} 
           icon={Mail} 
+          // trend="+12% this week" 
           color="bg-orange-50" 
           link="/dashboard/quotes"
         />
         <StatCard 
-          title="Direct Contacts" 
-          value={stats.contacts} 
+          title="Contacts" 
+          value={stats.contacts} // Assuming you have added contacts to stats
           icon={Users} 
+          // trend="+5.2% vs last month" 
           color="bg-emerald-50" 
           link="/dashboard/contact"
         />
@@ -197,161 +191,155 @@ const DashboardPage = () => {
 
       {/* Main Content Grid */}
       <div className="grid gap-8 lg:grid-cols-3">
-        {/* Left Column - Business Leads Table */}
-        <div className="lg:col-span-2 space-y-8">
+        {/* Left Column - Business Intelligence: Recent Leads */}
+        <div className="lg:col-span-2 space-y-6">
           <div className="rounded-[2.5rem] bg-white p-8 shadow-sm ring-1 ring-slate-100 overflow-hidden">
             <div className="mb-8 flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-bold text-slate-900">Business Intelligence: Recent Leads</h2>
-                <p className="text-xs font-medium text-slate-400 uppercase tracking-widest mt-1">Live synchronisation with web forms</p>
+                <h2 className="text-xl font-black text-slate-900 tracking-tight">Recent Business Leads</h2>
+                <p className="text-xs font-bold text-slate-400 mt-1 uppercase tracking-widest">Live Inbound Stream</p>
               </div>
-              <Link to="/dashboard/quotes" className="text-xs font-bold uppercase tracking-widest text-[#E32219] hover:underline">Lead Center</Link>
+              <Link to="/dashboard/quotes" className="group flex items-center gap-2 text-xs font-black uppercase tracking-widest text-red-600 hover:text-black transition-colors">
+                Analytical Report <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+              </Link>
             </div>
             
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-separate border-spacing-y-4">
+              <table className="w-full text-left">
                 <thead>
-                  <tr className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                    <th className="px-4 pb-2">Client Identity</th>
-                    <th className="px-4 pb-2">Interest Point</th>
-                    <th className="px-4 pb-2 text-right">Acquisition Date</th>
+                  <tr className="border-b border-slate-50">
+                    <th className="pb-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Client / Contact</th>
+                    <th className="pb-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Project Spec</th>
+                    <th className="pb-4 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Date</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {recentLeads.length === 0 ? (
-                    <tr>
-                      <td colSpan="3" className="py-20 text-center">
-                        <div className="flex flex-col items-center opacity-30">
-                          <Activity size={40} className="mb-4" />
-                          <p className="text-sm font-bold uppercase tracking-widest">Awaiting New Market Entries</p>
-                        </div>
-                      </td>
-                    </tr>
-                  ) : (
-                    recentLeads.map((lead) => (
-                      <tr key={lead._id} className="group transition-all">
-                        <td className="px-4 py-4 bg-slate-50/50 rounded-l-2xl border-y border-l border-slate-100">
-                          <div className="flex flex-col">
-                            <span className="font-bold text-slate-900 leading-none">{lead.name || "Anonymous Visitor"}</span>
-                            <span className="text-[10px] text-slate-400 mt-1.5 font-medium">{lead.email}</span>
+                <tbody className="divide-y divide-slate-50">
+                  {stats.recentLeads?.length > 0 ? (
+                    stats.recentLeads.map((lead) => (
+                      <tr key={lead._id} className="group hover:bg-slate-50/50 transition-colors">
+                        <td className="py-5">
+                          <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 font-bold group-hover:bg-red-600 group-hover:text-white transition-all">
+                              {lead.name?.charAt(0) || 'L'}
+                            </div>
+                            <div>
+                              <p className="text-sm font-black text-slate-900">{lead.name}</p>
+                              <p className="text-[10px] font-medium text-slate-400">{lead.email}</p>
+                            </div>
                           </div>
                         </td>
-                        <td className="px-4 py-4 bg-slate-50/50 border-y border-slate-100">
-                          <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${lead.serviceTitle ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-red-600'}`}>
-                            {lead.serviceTitle || "Direct Message"}
+                        <td className="py-5">
+                          <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${lead.serviceName ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-500'}`}>
+                            {lead.serviceName || 'General Inquiry'}
                           </span>
                         </td>
-                        <td className="px-4 py-4 bg-slate-50/50 rounded-r-2xl border-y border-r border-slate-100 text-right">
-                          <span className="text-xs font-bold text-slate-900">{new Date(lead.createdAt).toLocaleDateString()}</span>
+                        <td className="py-5 text-right">
+                          <p className="text-xs font-bold text-slate-900">{new Date(lead.createdAt).toLocaleDateString()}</p>
                         </td>
                       </tr>
                     ))
+                  ) : (
+                    <tr>
+                      <td colSpan="3" className="py-12 text-center">
+                        <p className="text-sm font-medium text-slate-400 italic">Analytical vacuum: No leads detected in recent cycles.</p>
+                      </td>
+                    </tr>
                   )}
                 </tbody>
               </table>
             </div>
           </div>
 
-          {/* Content Health Metrics */}
-          <div className="grid gap-6 sm:grid-cols-2">
-             <div className="group rounded-[2rem] bg-slate-900 p-8 text-white shadow-xl">
-               <div className="mb-6 flex items-center justify-between">
-                 <div className="flex size-10 items-center justify-center rounded-xl bg-white/10">
-                   <Package size={20} className="text-white" />
-                 </div>
-                 <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Operational</span>
+          {/* Precision Navigation Nodes */}
+          <div className="grid gap-6 sm:grid-cols-3">
+             <Link to="/dashboard/services" className="group rounded-[2rem] bg-slate-900 p-6 text-white shadow-lg transition-all hover:-translate-y-2 hover:shadow-2xl">
+               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm group-hover:bg-red-600 transition-colors">
+                 <Package size={20} />
                </div>
-               <h3 className="text-2xl font-black">Content Portfolio</h3>
-               <p className="mt-2 text-xs font-medium text-slate-400 leading-relaxed">
-                 You have <span className="text-white">{stats.totalServices}</span> live service protocols and <span className="text-white">{stats.totalGallery}</span> visual portfolio assets active.
-               </p>
-               <div className="mt-8 flex gap-3">
-                  <Link to="/dashboard/services" className="h-10 px-4 flex items-center justify-center rounded-xl bg-white text-black text-[10px] font-black uppercase tracking-widest hover:bg-slate-100 transition-colors">Manage Services</Link>
-                  <Link to="/dashboard/gallery" className="h-10 px-4 flex items-center justify-center rounded-xl bg-white/10 text-white text-[10px] font-black uppercase tracking-widest hover:bg-white/20 transition-colors">Portfolio Hub</Link>
-               </div>
-             </div>
+               <h3 className="font-bold">Scale Catalog</h3>
+               <p className="mt-1 text-xs text-slate-400">Deploy New Solutions</p>
+             </Link>
              
-             <div className="group rounded-[2.5rem] bg-white p-8 shadow-sm ring-1 ring-slate-100">
-               <div className="mb-6 flex items-center justify-between">
-                 <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-                   <TrendingUp size={20} />
-                 </div>
-                 <div className="h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+             <Link to="/dashboard/blogs" className="group rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-slate-100 transition-all hover:-translate-y-2 hover:shadow-lg">
+               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-colors">
+                 <FileText size={20} />
                </div>
-               <h3 className="text-2xl font-black text-slate-900">Social Trust</h3>
-               <p className="mt-2 text-xs font-medium text-slate-500 leading-relaxed">
-                 Client feedback system is healthy with <span className="text-slate-900 font-bold">{stats.totalTestimonials}</span> verified reviews circulating.
-               </p>
-               <div className="mt-8">
-                  <Link to="/dashboard/testimonials" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#E32219] group-hover:gap-4 transition-all">
-                    Verification Center <ArrowRight size={14} />
-                  </Link>
+               <h3 className="font-bold text-slate-900">Push Insights</h3>
+               <p className="mt-1 text-xs text-slate-500">Global Knowledge Sync</p>
+             </Link>
+
+             <Link to="/dashboard/gallery" className="group rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-slate-100 transition-all hover:-translate-y-2 hover:shadow-lg">
+               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                 <BarChart3 size={20} />
                </div>
-             </div>
+               <h3 className="font-bold text-slate-900">Visual Core</h3>
+               <p className="mt-1 text-xs text-slate-500">Synchronize Assets</p>
+             </Link>
           </div>
         </div>
 
-        {/* Right Column - Status Overview */}
+        {/* Right Column - Content Intelligence & System Health */}
         <div className="space-y-6">
-          <div className="rounded-[2.5rem] bg-white p-8 shadow-sm ring-1 ring-slate-100 h-full">
-            <div className="mb-8 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-slate-900">Asset Velocity</h2>
-              <div className="flex size-8 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                <Activity size={18} />
-              </div>
+          <div className="rounded-[2.5rem] bg-slate-900 p-8 text-white shadow-xl h-full border border-white/5 relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-12 opacity-5 scale-150 rotate-12">
+               <Activity size={180} />
             </div>
             
-            <div className="space-y-8">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  <span>Gallery Utilization</span>
-                  <span>{Math.min(100, (stats.totalGallery / 20) * 100).toFixed(0)}%</span>
+            <div className="relative z-10">
+              <div className="mb-10 flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-black tracking-tighter">Content Intelligence</h2>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Health & Status</p>
                 </div>
-                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-blue-600 transition-all duration-1000" 
-                    style={{ width: `${Math.min(100, (stats.totalGallery / 20) * 100)}%` }} 
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  <span>Market Buzz (Blogs)</span>
-                  <span>{Math.min(100, (stats.totalBlogs / 10) * 100).toFixed(0)}%</span>
-                </div>
-                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-orange-500 transition-all duration-1000" 
-                    style={{ width: `${Math.min(100, (stats.totalBlogs / 10) * 100)}%` }} 
-                  />
+                <div className="flex h-2 w-2">
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                  </span>
                 </div>
               </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  <span>Inquiry Velocity</span>
-                  <span>{Math.min(100, (stats.recentInquiries / 15) * 100).toFixed(0)}%</span>
-                </div>
-                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-red-600 transition-all duration-1000" 
-                    style={{ width: `${Math.min(100, (stats.recentInquiries / 15) * 100)}%` }} 
-                  />
-                </div>
-              </div>
-
-              <div className="mt-12 rounded-3xl bg-slate-50 p-6 border border-slate-100">
-                <div className="flex items-start gap-3">
-                  <div className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-white text-slate-400 shadow-sm ring-1 ring-slate-100">
-                    <Activity size={16} />
+              
+              <div className="space-y-4">
+                <Link to="/dashboard/gallery" className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 group hover:bg-white/10 transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="size-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                      <ImageIcon size={14} />
+                    </div>
+                    <span className="text-sm font-bold text-slate-200">Asset Gallery</span>
                   </div>
-                  <div>
-                    <h4 className="text-xs font-black uppercase tracking-widest text-slate-900 leading-none">Security Status</h4>
-                    <p className="mt-2 text-[10px] font-medium text-slate-500 leading-relaxed">
-                      All systems operational. End-to-end encryption active on management protocols.
-                    </p>
+                  <span className="text-xs font-black text-emerald-400">{stats.totalGallery} Units</span>
+                </Link>
+
+                <Link to="/dashboard/testimonials" className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 group hover:bg-white/10 transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="size-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400">
+                      <Users size={14} />
+                    </div>
+                    <span className="text-sm font-bold text-slate-200">Social Trust</span>
                   </div>
+                  <span className="text-xs font-black text-blue-400">{stats.totalTestimonials} Verified</span>
+                </Link>
+
+                <Link to="/dashboard/specials" className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 group hover:bg-white/10 transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="size-8 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400">
+                      <Zap size={14} />
+                    </div>
+                    <span className="text-sm font-bold text-slate-200">Active Specials</span>
+                  </div>
+                  <span className="text-xs font-black text-red-400">{stats.activeSpecials} Live</span>
+                </Link>
+
+                <div className="pt-6 mt-6 border-t border-white/10">
+                   <div className="flex items-center justify-between mb-4">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">System Capacity</span>
+                      <span className="text-[10px] font-black text-emerald-400">OPTIMAL</span>
+                   </div>
+                   <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-full bg-emerald-400 w-[84%] rounded-full shadow-[0_0_10px_rgba(52,211,153,0.5)]"></div>
+                   </div>
+                   <p className="mt-4 text-[10px] leading-relaxed text-slate-400 font-medium">
+                      Core systems are operating within peak performance parameters. All inbound lead conduits are clear and synchronized.
+                   </p>
                 </div>
               </div>
             </div>

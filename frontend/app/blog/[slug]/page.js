@@ -15,11 +15,12 @@ export async function generateMetadata({ params }) {
       };
     }
 
+    const pageTitle = blog.pageTitle || blog.cardTitle || blog.title;
     return {
-      title: `${blog.title} | Tridev Labels Insights`,
-      description: blog.metaDescription || blog.title,
+      title: `${pageTitle} | Tridev Labels Insights`,
+      description: blog.metaDescription || pageTitle,
       openGraph: {
-        title: blog.title,
+        title: pageTitle,
         description: blog.metaDescription,
         images: [blog.featuredImage || '/default-og.jpg'],
         type: 'article',

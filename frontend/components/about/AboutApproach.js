@@ -85,7 +85,7 @@ export default function AboutApproach() {
            <div className="approach-card space-y-6">
               <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#E32219]">Our Methodology</span>
               <h2 className="text-4xl font-light text-gray-900 leading-tight">
-                Engineering <br/> <span className="font-medium">Perfection.</span>
+                Engineering <br/> <span className="font-medium">Trust & Quality.</span>
               </h2>
               <p className="text-gray-500 font-light leading-relaxed">
                 We combine artisan craftsmanship with industrial automation to deliver labels that define global brands.
@@ -187,9 +187,9 @@ export default function AboutApproach() {
                    <h2 className="text-6xl font-light text-gray-900 leading-[0.95] tracking-tighter">
                       Beyond <br/> <span className="text-[#E32219] font-medium">Standard.</span>
                    </h2>
-                   <p className="text-gray-500 text-lg font-light leading-relaxed">
-                      At Tridev Labels, we don't just print; we engineer brand assets designed to withstand the rigorous demands of the global supply chain, ensuring your identity remains pristine from factory to consumer.
-                   </p>
+                    <p className="text-gray-500 text-lg font-light leading-relaxed">
+                       Our journey is shaped not just by machines, but by people, relationships, and the belief that steady progress creates lasting success. We engineer brand assets that carry our promise of quality and consistency.
+                    </p>
                 </div>
              </div>
 

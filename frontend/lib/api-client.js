@@ -36,7 +36,9 @@ const handleApiError = (error) => {
 
   if (error.response) {
     // Server responded with a status code out of 2xx
-    errorResponse.message = error.response.data?.message || `Server Error: ${error.response.status}`;
+    // Attempt to extract the error message from various formats
+    const serverErrorMessage = error.response.data?.error || error.response.data?.message;
+    errorResponse.message = serverErrorMessage || `Server Error: ${error.response.status}`;
     if (isDev) {
       console.error(`[API Error] ${error.response.status} ${error.config?.url}:`, error.response.data);
     }

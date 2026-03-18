@@ -29,11 +29,11 @@ export async function generateMetadata({ params }) {
   }
 
   return {
-    title: `${service.title} | Premium Labeling Solutions`,
-    description: service.description,
+    title: service.metaTitle || `${service.title} | Premium Labeling Solutions`,
+    description: service.metaDescription || service.description,
     openGraph: {
-      title: service.title,
-      description: service.description,
+      title: service.metaTitle || service.title,
+      description: service.metaDescription || service.description,
       images: [{ url: service.heroImage }],
     },
   };
@@ -49,5 +49,5 @@ export default async function ServiceDetailPage({ params }) {
     notFound();
   }
 
-  return <ServiceContent service={service} />;
+  return <ServiceContent service={service} slug={slug} />;
 }

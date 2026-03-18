@@ -26,9 +26,11 @@ export default async function Home() {
       <AboutUs />
 
       <SolutionsSection />
+         <WhyChooseSection />
       <FinishesGallery />
-      <WhyChooseSection />
+
       <OurProcessSection />
+  
       <Testimonials />
       <BlogsSection initialBlogs={blogs} />
     </div>

@@ -92,7 +92,7 @@ const BlogDetails = () => {
       <Toast type="success" message={successMessage} />
       <Toast type="error" message={error} />
       <Helmet>
-        <title>{`${blog.title} | Admin Preview`}</title>
+        <title>{`${blog.pageTitle || blog.cardTitle || blog.title} | Admin Preview`}</title>
         <meta name="description" content={blog.metaDescription || ""} />
       </Helmet>
 
@@ -117,7 +117,7 @@ const BlogDetails = () => {
           <div className="relative aspect-[21/9] overflow-hidden grayscale-[30%] hover:grayscale-0 transition-all duration-700">
             <img
               src={blog.featuredImage}
-              alt={blog.title}
+              alt={blog.cardTitle || blog.title}
               className="w-full h-full object-cover scale-105 hover:scale-100 transition-transform duration-700"
             />
             <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
@@ -150,10 +150,19 @@ const BlogDetails = () => {
                 <p className="text-sm font-bold text-black">{new Date(blog.publishedDate || blog.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}</p>
               </div>
             </div>
+            <div className="flex items-center gap-3">
+              <div className="size-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                <FileText size={18} />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Card Display Title</p>
+                <p className="text-sm font-bold text-black">{blog.cardTitle || blog.title}</p>
+              </div>
+            </div>
           </div>
 
           <h1 className="text-4xl md:text-6xl font-black text-black mb-10 leading-[1.1] tracking-tight">
-            {blog.title}
+            {blog.pageTitle || blog.title}
           </h1>
 
           {/* Main Content */}

@@ -9,7 +9,8 @@ const { getBaseUrl, deleteLocalFile, parseJSON, generateUniqueSlug } = require('
 // @access  Private
 exports.createBlog = asyncHandler(async (req, res, next) => {
   const {
-    title,
+    cardTitle,
+    pageTitle,
     content,
     author,
     category,
@@ -22,8 +23,8 @@ exports.createBlog = asyncHandler(async (req, res, next) => {
     isPublished
   } = req.body;
 
-  if (!title || !content) {
-    return next(new ErrorResponse('Title and content are required', 400));
+  if (!cardTitle || !pageTitle || !content) {
+    return next(new ErrorResponse('Card title, Page title and content are required', 400));
   }
 
   let featuredImage = '';
@@ -32,27 +33,37 @@ exports.createBlog = asyncHandler(async (req, res, next) => {
     featuredImage = `${getBaseUrl(req)}/${normalizedPath}`;
   }
 
-  const slug = await generateUniqueSlug(Blog, title);
+  const slug = await generateUniqueSlug(Blog, cardTitle);
 
   const blog = new Blog({
-    title,
+    cardTitle,
+    pageTitle,
     slug,
     content,
     author: author || 'Anonymous',
-    category,
+    category: category || 'General',
     featuredImage,
+    metaDescription: metaDescription || '',
+    publishedDate: publishedDate ? new Date(publishedDate) : new Date(),
+    isPublished: isPublished === 'true' || isPublished === true,
     sections: parseJSON(sections, []),
     faqs: parseJSON(faqs, []),
-    highlightBox: parseJSON(highlightBox, null),
-    tags: Array.isArray(tags)
-      ? tags.map(tag => tag.trim())
-      : typeof tags === 'string'
-        ? tags.split(',').map(tag => tag.trim())
-        : [],
-    metaDescription,
-    publishedDate: publishedDate ? new Date(publishedDate) : null,
-    isPublished: isPublished === 'true' || isPublished === true
+    highlightBox: parseJSON(highlightBox, null)
   });
+
+  // Handle Tags
+  if (tags) {
+    let tagArray = [];
+    const parsedTags = parseJSON(tags);
+    if (Array.isArray(parsedTags)) {
+      tagArray = parsedTags;
+    } else if (typeof tags === 'string') {
+      tagArray = tags.split(',').map(tag => tag.trim());
+    } else if (Array.isArray(tags)) {
+      tagArray = tags;
+    }
+    blog.tags = tagArray.map(t => String(t).trim()).filter(t => t !== "");
+  }
 
   await blog.save();
 
@@ -107,7 +118,8 @@ exports.getBlogBySlug = asyncHandler(async (req, res, next) => {
 // @access  Private
 exports.updateBlog = asyncHandler(async (req, res, next) => {
   const {
-    title,
+    cardTitle,
+    pageTitle,
     content,
     author,
     category,
@@ -125,36 +137,70 @@ exports.updateBlog = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse(`Blog not found with id of ${req.params.id}`, 404));
   }
 
+  // Featured Image Update
   if (req.file) {
     if (blog.featuredImage && blog.featuredImage.includes('/uploads/')) {
-      const oldPath = blog.featuredImage.split(req.get('host'))[1];
-      if (oldPath) {
-        deleteLocalFile(path.join(__dirname, '..', oldPath.substring(1)));
+      const oldRelativePath = blog.featuredImage.split(req.get('host'))[1];
+      if (oldRelativePath) {
+        deleteLocalFile(path.join(__dirname, '..', oldRelativePath.substring(1)));
       }
     }
     const normalizedPath = req.file.path.replace(/\\/g, '/');
     blog.featuredImage = `${getBaseUrl(req)}/${normalizedPath}`;
   }
 
-  if (title) {
-    blog.title = title;
-    blog.slug = await generateUniqueSlug(Blog, title, blog._id);
+  // Handle Title and Slug (only update slug if cardTitle changes)
+  if (cardTitle && cardTitle !== blog.cardTitle) {
+    blog.cardTitle = cardTitle;
+    blog.slug = await generateUniqueSlug(Blog, cardTitle, blog._id);
+  } else if (cardTitle) {
+    blog.cardTitle = cardTitle;
   }
 
-  blog.content = content ?? blog.content;
-  blog.author = author ?? blog.author;
-  blog.category = category ?? blog.category;
-  blog.sections = sections ? parseJSON(sections, blog.sections) : blog.sections;
-  blog.faqs = faqs ? parseJSON(faqs, blog.faqs) : blog.faqs;
-  blog.highlightBox = highlightBox ? parseJSON(highlightBox, blog.highlightBox) : blog.highlightBox;
-  blog.tags = Array.isArray(tags)
-    ? tags.map(tag => tag.trim())
-    : typeof tags === 'string'
-      ? tags.split(',').map(tag => tag.trim())
-      : blog.tags;
-  blog.metaDescription = metaDescription ?? blog.metaDescription;
-  blog.publishedDate = publishedDate ? new Date(publishedDate) : blog.publishedDate;
-  blog.isPublished = isPublished === 'true' || isPublished === true || blog.isPublished;
+  if (pageTitle !== undefined) blog.pageTitle = pageTitle;
+
+  // Update Core Fields
+  if (content !== undefined) blog.content = content;
+  if (author !== undefined) blog.author = author;
+  if (category !== undefined) blog.category = category;
+  if (metaDescription !== undefined) blog.metaDescription = metaDescription;
+  
+  // Handle Booleans Correctly
+  if (isPublished !== undefined) {
+    blog.isPublished = isPublished === 'true' || isPublished === true;
+  }
+
+  // Handle Dates
+  if (publishedDate) {
+    blog.publishedDate = new Date(publishedDate);
+  }
+
+  // Handle Complex JSON Fields
+  if (sections) blog.sections = parseJSON(sections, blog.sections);
+  if (faqs) blog.faqs = parseJSON(faqs, blog.faqs);
+  if (highlightBox) blog.highlightBox = parseJSON(highlightBox, blog.highlightBox);
+  
+  // Handle Tags Array
+  if (tags) {
+    let tagArray = [];
+    
+    // 1. Try to parse if it's a JSON string
+    const parsedTags = parseJSON(tags);
+    
+    if (Array.isArray(parsedTags)) {
+      tagArray = parsedTags;
+    } else if (typeof tags === 'string') {
+      // 2. Handle as comma-separated string
+      tagArray = tags.split(',').map(tag => tag.trim());
+    } else if (Array.isArray(tags)) {
+      // 3. It's already an array
+      tagArray = tags;
+    }
+
+    if (tagArray.length > 0) {
+      blog.tags = tagArray.map(t => String(t).trim()).filter(t => t !== "");
+    }
+  }
 
   await blog.save();
 

@@ -1,4 +1,4 @@
-import { Image, Zap, BookOpen, Layers, Mail, FileText, MessageSquare, Settings } from "lucide-react";
+import { Image, Zap, BookOpen, Layers, Mail, FileText, MessageSquare, Settings, History } from "lucide-react";
 
 export const navbarLinks = [
   {
@@ -30,6 +30,21 @@ export const navbarLinks = [
         path: "/dashboard/contact",
       },
       {
+        label: "Live Chat",
+        icon: MessageSquare,
+        path: "/dashboard/chat",
+      },
+      {
+        label: "Chat History",
+        icon: History,
+        path: "/dashboard/chat/history",
+      },
+      {
+        label: "Chat Settings",
+        icon: Settings,
+        path: "/dashboard/chat/settings",
+      },
+      {
         label: "Quotes",
         icon: FileText,
         path: "/dashboard/quotes",
@@ -54,6 +69,11 @@ export const navbarLinks = [
   {
     title: "System",
     links: [
+      {
+        label: "Audit Logs",
+        icon: History,
+        path: "/dashboard/history",
+      },
       {
         label: "Settings",
         icon: Settings,

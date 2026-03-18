@@ -37,7 +37,7 @@ import { blogService } from "@/services/blog.service";
 
 // Helper components
 const CollapsibleSection = ({ title, icon: Icon, isExpanded, onToggle, children, badge }) => (
-  <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm transition-all duration-300">
+  <div className={`bg-white rounded-3xl border border-slate-100 shadow-sm transition-all duration-300 ${isExpanded ? 'overflow-visible' : 'overflow-hidden'}`}>
     <button
       type="button"
       onClick={onToggle}
@@ -57,7 +57,7 @@ const CollapsibleSection = ({ title, icon: Icon, isExpanded, onToggle, children,
       </div>
     </button>
     {isExpanded && (
-      <div className="p-8 border-t border-slate-50 bg-white animate-in slide-in-from-top-4 duration-300">
+      <div className="p-8 border-t border-slate-50 bg-white animate-in slide-in-from-top-4 duration-300 overflow-visible">
         {children}
       </div>
     )}
@@ -77,7 +77,8 @@ const quillModules = {
 const BlogPage = () => {
   const [blogs, setBlogs] = useState([]);
   const [newBlog, setNewBlog] = useState({
-    title: "",
+    cardTitle: "",
+    pageTitle: "",
     slug: "",
     content: "",
     sections: [{ heading: "", content: "" }],
@@ -145,9 +146,9 @@ const BlogPage = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    if (name === "title") {
+    if (name === "cardTitle") {
       const slug = value.toLowerCase().replace(/[^\w\s]/gi, "").replace(/\s+/g, "-").replace(/-+/g, "-").trim();
-      setNewBlog(prev => ({ ...prev, title: value, slug }));
+      setNewBlog(prev => ({ ...prev, cardTitle: value, slug }));
     } else {
       setNewBlog(prev => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
     }
@@ -155,7 +156,7 @@ const BlogPage = () => {
 
   const clearForm = () => {
     setNewBlog({
-      title: "", slug: "", content: "",
+      cardTitle: "", pageTitle: "", slug: "", content: "",
       sections: [{ heading: "", content: "" }], highlightBox: { title: "", intro: "", points: [""] },
       faqs: [{ question: "", answer: "" }], category: "", tags: [], newTag: "",
       metaDescription: "", publishedDate: "", featuredImage: null,
@@ -168,20 +169,41 @@ const BlogPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!newBlog.title.trim()) return setError("Title is strictly mandatory.");
+    if (!newBlog.cardTitle.trim()) return setError("Card Title is strictly mandatory.");
+    if (!newBlog.pageTitle.trim()) return setError("Page Title is strictly mandatory.");
     setIsSubmitting(true);
     setError("");
 
     try {
       const formData = new FormData();
-      Object.entries(newBlog).forEach(([key, value]) => {
-        if (["sections", "faqs", "highlightBox", "tags"].includes(key)) {
-          formData.append(key, key === "tags" ? value : JSON.stringify(value));
-        } else if (!["featuredImagePreview", "newTag", "featuredImage"].includes(key)) {
-          formData.append(key, value);
+      
+      // Fields to explicitly include
+      const fields = [
+        'cardTitle', 'pageTitle', 'content', 'author', 'category', 
+        'metaDescription', 'publishedDate', 'isPublished', 'slug'
+      ];
+      
+      fields.forEach(field => {
+        if (newBlog[field] !== undefined && newBlog[field] !== null) {
+          formData.append(field, newBlog[field]);
         }
       });
-      if (newBlog.featuredImage) formData.append("featuredImage", newBlog.featuredImage);
+
+      // Complex fields that need JSON stringification
+      const complexFields = ['sections', 'faqs', 'highlightBox'];
+      complexFields.forEach(field => {
+        formData.append(field, JSON.stringify(newBlog[field]));
+      });
+
+      // Tags handling
+      if (newBlog.tags && newBlog.tags.length > 0) {
+        formData.append('tags', JSON.stringify(newBlog.tags));
+      }
+
+      // Featured Image - Only append if it's a new file (not the URL string)
+      if (newBlog.featuredImage instanceof File) {
+        formData.append("featuredImage", newBlog.featuredImage);
+      }
 
       if (editingId) {
         await blogService.update(editingId, formData);
@@ -203,6 +225,8 @@ const BlogPage = () => {
   const handleEdit = (blog) => {
     setNewBlog({
       ...blog,
+      cardTitle: blog.cardTitle || blog.title || "",
+      pageTitle: blog.pageTitle || blog.title || "",
       sections: blog.sections?.length ? blog.sections : [{ heading: "", content: "" }],
       faqs: blog.faqs?.length ? blog.faqs : [{ question: "", answer: "" }],
       highlightBox: blog.highlightBox || { title: "", intro: "", points: [""] },
@@ -240,7 +264,8 @@ const BlogPage = () => {
 
   const filteredBlogs = useMemo(() => {
     return blogs.filter(blog => 
-      blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (blog.cardTitle?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+      (blog.pageTitle?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
       blog.category?.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [blogs, searchQuery]);
@@ -315,11 +340,15 @@ const BlogPage = () => {
             <div className="p-8 md:p-12">
               <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
                 <div className="xl:col-span-8 space-y-6">
-                  <CollapsibleSection title="Foundation & Identity" icon={FileText} isExpanded={expandedSections.basic} onToggle={() => toggleSection('basic')} badge={newBlog.title || "Requires input"}>
+                  <CollapsibleSection title="Foundation & Identity" icon={FileText} isExpanded={expandedSections.basic} onToggle={() => toggleSection('basic')} badge={newBlog.cardTitle || "Requires input"}>
                     <div className="grid gap-8">
                       <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-1">Publication Title</label>
-                        <input type="text" name="title" value={newBlog.title} onChange={handleInputChange} placeholder="Unleashing industrial potential..." className="input-field text-xl font-bold py-4" required />
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-1">Card Title (Used for Slugs)</label>
+                        <input type="text" name="cardTitle" value={newBlog.cardTitle} onChange={handleInputChange} placeholder="Brief card overview title..." className="input-field text-xl font-bold py-4" required />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-1">Full Page Title (Below Image)</label>
+                        <input type="text" name="pageTitle" value={newBlog.pageTitle} onChange={handleInputChange} placeholder="Immersive full-page headline..." className="input-field text-xl font-bold py-4" required />
                       </div>
                       <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
@@ -337,9 +366,16 @@ const BlogPage = () => {
                           <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none">
                             <ArrowRight size={14} />
                           </div>
-                          <input type="text" name="slug" value={newBlog.slug} onChange={handleInputChange} className="input-field pl-10 text-xs font-mono text-slate-500" placeholder="auto-generated-slug" />
+                          <input 
+                            type="text" 
+                            name="slug" 
+                            value={newBlog.slug} 
+                            disabled 
+                            className="input-field pl-10 text-xs font-mono text-slate-500 bg-slate-100/80 cursor-not-allowed opacity-75" 
+                            placeholder="auto-generated-slug" 
+                          />
                         </div>
-                        <p className="text-[9px] text-slate-400 px-1 italic">This identifier is used in the article's URL architecture.</p>
+                        <p className="text-[9px] text-slate-400 px-1 italic font-medium">This identifier is auto-generated from the Card Title for URL stability.</p>
                       </div>
                     </div>
                   </CollapsibleSection>
@@ -377,7 +413,7 @@ const BlogPage = () => {
                       </div>
                       <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-1">Technical Content</label>
-                        <div className="rounded-3xl border border-slate-100 overflow-hidden shadow-inner ring-1 ring-slate-100">
+                        <div className="rounded-3xl border border-slate-100 shadow-inner ring-1 ring-slate-100 relative z-10">
                           <ReactQuill value={newBlog.content} onChange={(v) => setNewBlog(p => ({ ...p, content: v }))} modules={quillModules} className="bg-white min-h-[400px]" />
                         </div>
                       </div>
@@ -437,11 +473,13 @@ const BlogPage = () => {
                             </div>
                             <div className="space-y-2">
                               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 px-1">Module Content</label>
-                              <ReactQuill value={section.content} onChange={(v) => {
-                                const updated = [...newBlog.sections];
-                                updated[index].content = v;
-                                setNewBlog(prev => ({ ...prev, sections: updated }));
-                              }} modules={quillModules} className="bg-white rounded-2xl overflow-hidden border border-slate-100" />
+                              <div className="rounded-2xl border border-slate-100 relative z-10">
+                                <ReactQuill value={section.content} onChange={(v) => {
+                                  const updated = [...newBlog.sections];
+                                  updated[index].content = v;
+                                  setNewBlog(prev => ({ ...prev, sections: updated }));
+                                }} modules={quillModules} className="bg-white overflow-visible" />
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -585,14 +623,14 @@ const BlogPage = () => {
               <div className="space-y-8">
                 <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                   {paginatedBlogs.map(blog => (
-                    <div key={blog._id} className="group relative flex flex-col overflow-hidden rounded-[3rem] bg-white shadow-sm ring-1 ring-slate-100 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+                    <div key={blog._id} className="group relative flex flex-col overflow-hidden rounded-[3rem] bg-white shadow-sm ring-1 ring-slate-100 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 ">
                       <div className="relative aspect-[16/10] overflow-hidden">
-                        {blog.featuredImage ? (<img src={blog.featuredImage} alt={blog.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />) : (<div className="h-full w-full bg-slate-50 flex items-center justify-center text-slate-200"><ImageIcon size={64} /></div>)}
+                        {blog.featuredImage ? (<img src={blog.featuredImage} alt={blog.cardTitle || blog.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />) : (<div className="h-full w-full bg-slate-50 flex items-center justify-center text-slate-200"><ImageIcon size={64} /></div>)}
                         <div className="absolute top-6 left-6"><span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider backdrop-blur-md ring-1 ring-white/20 ${blog.isPublished ? 'bg-emerald-500/90 text-white' : 'bg-amber-500/90 text-white'}`}>{blog.isPublished ? 'Live' : 'Draft'}</span></div>
                       </div>
                       <div className="p-8 flex-1 flex flex-col">
                         <div className="flex items-center gap-2 mb-4"><Clock size={14} className="text-red-600" /><span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{new Date(blog.createdAt).toLocaleDateString()}</span></div>
-                        <h3 className="text-xl font-black text-black mb-4 line-clamp-2 leading-tight tracking-tight group-hover:text-red-600 transition-colors">{blog.title}</h3>
+                        <h3 className="text-xl font-black text-black mb-4 line-clamp-2 leading-tight tracking-tight group-hover:text-red-600 transition-colors">{blog.cardTitle || blog.title}</h3>
                         <p className="text-sm font-medium text-slate-500 mb-8 line-clamp-3 leading-relaxed">{blog.metaDescription || "No overview provided for this entry."}</p>
                         <div className="mt-auto pt-6 border-t border-slate-50 flex items-center justify-between">
                           <Link to={`/dashboard/blogs/${blog.slug}`} className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-red-600 transition-colors"><Eye size={16} />Preview</Link>

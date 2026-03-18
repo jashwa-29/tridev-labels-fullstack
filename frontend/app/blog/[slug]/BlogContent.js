@@ -97,7 +97,7 @@ export default function BlogContent({ blog }) {
                 <div className="relative aspect-video md:aspect-[21/9] overflow-hidden rounded-[24px] md:rounded-[32px]">
                   <Image
                     src={getImgUrl(blog.featuredImage)}
-                    alt={blog.title}
+                    alt={blog.pageTitle || blog.title}
                     fill
                     priority
                     className="object-cover"
@@ -110,7 +110,7 @@ export default function BlogContent({ blog }) {
             {/* 2. Article Title */}
             <div className="mb-8 fade-in">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium text-gray-900 leading-[1.1] mb-6 tracking-tighter">
-                {blog.title}
+                {blog.pageTitle || blog.title}
               </h1>
             </div>
             

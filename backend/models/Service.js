@@ -1,14 +1,45 @@
 const mongoose = require('mongoose');
-
-const SubProductSchema = new mongoose.Schema({
-  title: { type: String },
-  desc: { type: String },
-  image: { type: String }
-});
+const History = require('./History');
 
 const SpecSchema = new mongoose.Schema({
   label: { type: String, required: true },
   value: { type: String, required: true }
+});
+
+const SubProductSchema = new mongoose.Schema({
+  title: { type: String },
+  slug: { type: String },
+  subtitle: { type: String },
+  desc: { type: String },
+  fullDescription: { type: String },
+  metaTitle: { type: String }, // Details page title
+  metaDescription: { type: String }, // Details page meta description
+  features: [String],
+  specifications: [SpecSchema],
+  applications: [String],
+  benefits: [String],
+  faqs: [
+    {
+      question: String,
+      answer: String
+    }
+  ],
+  sections: [
+    {
+      heading: String,
+      content: String,
+      image: String,
+      imageAlt: String
+    }
+  ],
+  image: { type: String },
+  imageAlt: { type: String }, // Alt text for sub-product image
+  gallery: [
+    {
+      url: String,
+      alt: String
+    }
+  ]
 });
 
 const ServiceSchema = new mongoose.Schema({
@@ -28,11 +59,23 @@ const ServiceSchema = new mongoose.Schema({
   description: {
     type: String
   },
+  metaTitle: {
+    type: String
+  },
+  metaDescription: {
+    type: String
+  },
   heroImage: {
     type: String
   },
+  heroImageAlt: {
+    type: String // Alt text for hero image
+  },
   cardImage: {
     type: String
+  },
+  cardImageAlt: {
+    type: String // Alt text for card image
   },
   subProducts: [SubProductSchema],
   specs: [SpecSchema],
@@ -75,15 +118,62 @@ const ServiceSchema = new mongoose.Schema({
   }
 });
 
-// Create service slug from the title
+// Slug Generation Middleware
 ServiceSchema.pre('save', function(next) {
-  if (this.isModified('title')) {
+  if (this.isModified('title') && this.title) {
     this.slug = this.title
       .toLowerCase()
       .replace(/[^\w ]+/g, '')
       .replace(/ +/g, '-');
   }
+
+  if (this.subProducts && this.subProducts.length > 0) {
+    this.subProducts.forEach(subProduct => {
+      if (subProduct.title && !subProduct.slug) {
+        subProduct.slug = subProduct.title
+          .toLowerCase()
+          .replace(/[^\w ]+/g, '')
+          .replace(/ +/g, '-');
+      }
+    });
+  }
+  
+  next();
+});
+
+// History Tracking Middleware
+ServiceSchema.pre('save', async function(next) {
+  if (!this.isNew) {
+    try {
+      const original = await this.constructor.findById(this._id);
+      if (original) {
+        await History.create({
+          originalId: this._id,
+          modelName: 'Service',
+          data: original.toObject(),
+          action: 'Edit'
+        });
+      }
+    } catch (err) {
+      console.error('History tracking failed for Service (Edit):', err);
+    }
+  }
+  next();
+});
+
+ServiceSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
+  try {
+    await History.create({
+      originalId: this._id,
+      modelName: 'Service',
+      data: this.toObject(),
+      action: 'Delete'
+    });
+  } catch (err) {
+    console.error('History tracking failed for Service (Delete):', err);
+  }
   next();
 });
 
 module.exports = mongoose.model('Service', ServiceSchema);
+

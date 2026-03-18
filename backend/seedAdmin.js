@@ -11,17 +11,23 @@ const seedAdmin = async () => {
 
   const adminExists = await User.findOne({ email: adminEmail });
   if (adminExists) {
-    console.log('✅ Admin already exists');
+    if (adminExists.role !== 'superadmin') {
+      adminExists.role = 'superadmin';
+      await adminExists.save();
+      console.log('✅ User exists, upgraded to Super Admin');
+    } else {
+        console.log('✅ Super Admin already exists');
+    }
     console.log(`👉 Email: ${adminEmail}`);
-    console.log(`👉 Password: ${adminPassword}`);
-    return process.exit();
+    // console.log(`👉 Password: ${adminPassword}`); // Password unknown if existing
+    process.exit();
   }
 
   const admin = new User({
-    name: 'Admin',
+    name: 'Super Admin',
     email: adminEmail,
     password: adminPassword, // Will be hashed by model
-    role: 'admin'
+    role: 'superadmin'
   });
 
   await admin.save();

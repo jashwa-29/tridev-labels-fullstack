@@ -1,11 +1,6 @@
 import PageHeader from '@/components/common/PageHeader';
-import dynamic from 'next/dynamic';
 import ContactSection from '@/components/contact/ContactSection';
-
-const ContactMap = dynamic(() => import('@/components/contact/ContactMap'), { 
-  ssr: false,
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse" /> 
-});
+import ContactMap from '@/components/contact/ContactMap';
 
 export const metadata = {
   title: "Contact Our Label Specialists | Tridev Labels",

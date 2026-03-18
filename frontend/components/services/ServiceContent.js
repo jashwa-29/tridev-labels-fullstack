@@ -46,7 +46,7 @@ const FAQItem = ({ faq }) => {
   );
 };
 
-export default function ServiceContent({ service }) {
+export default function ServiceContent({ service, slug }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef(null);
 
@@ -204,7 +204,8 @@ export default function ServiceContent({ service }) {
                   <div className="group relative bg-white p-6 md:p-8 rounded-2xl md:rounded-3xl shadow-lg border border-gray-100 hover:shadow-2xl hover:border-[#E32219]/20 transition-all duration-500">
                     <div className="absolute top-0 right-0 w-16 md:w-20 h-16 md:h-20 bg-gray-900/5 rounded-full blur-2xl group-hover:bg-gray-900/10 transition-all duration-500"></div>
                     <div className="relative z-10">
-                      <div className="text-xl md:text-2xl lg:text-3xl font-light text-gray-900 tracking-tighter mb-1 md:mb-2 group-hover:text-[#E32219] transition-colors duration-300">ISO Certified</div>
+                      <div className="text-3xl md:text-4xl lg:text-5xl font-light text-gray-900 tracking-tighter mb-1 md:mb-2 group-hover:text-[#E32219] transition-colors duration-300">ISO Certified</div>
+                <div className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.25em] text-gray-400 mb-2 md:mb-3">ISO 9001:2015</div>
                     </div>
                   </div>
                 </div>
@@ -304,7 +305,7 @@ export default function ServiceContent({ service }) {
                     <div className="aspect-4/3 rounded-3xl overflow-hidden shadow-xl relative">
                       <Image 
                         src={getImgUrl(item.image) || "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&q=80"} 
-                        alt={item.title}
+                        alt={item.imageAlt || item.title}
                         fill
                         unoptimized={true}
                         className="object-cover grayscale brightness-90 transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110"
@@ -322,13 +323,13 @@ export default function ServiceContent({ service }) {
                       <h3 className="text-3xl md:text-4xl lg:text-5xl font-light text-gray-900 tracking-tight leading-tight">{item.title}</h3>
                     </div>
                     <p className="text-gray-600 font-light leading-relaxed text-lg">{item.desc}</p>
-                    <button 
-                      onClick={() => setIsModalOpen(true)}
-                      className="group flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-900 border-b-2 border-[#E32219] pb-2 hover:text-[#E32219] transition-all duration-300"
-                    >
-                      Request Technical Quote
-                      <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                    </button>
+                      <Link 
+                        href={`/services/${slug}/${item.slug || item.title.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-')}`}
+                        className="group inline-flex items-center gap-5 px-10 py-5 bg-gray-50 text-gray-900 text-[10px] font-bold uppercase tracking-[0.3em] rounded-full hover:bg-[#E32219] hover:text-white transition-all duration-500 shadow-sm hover:shadow-xl hover:shadow-[#E32219]/20 mt-6"
+                      >
+                        Explore Product Specs
+                        <Info className="w-4 h-4 transform group-hover:rotate-12 transition-transform" />
+                      </Link>
                   </div>
                 </div>
               ))}

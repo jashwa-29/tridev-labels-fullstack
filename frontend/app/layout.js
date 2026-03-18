@@ -4,6 +4,8 @@ import Header from "@/components/layout/Header";
 import CursorFollower from "@/components/layout/CursorFollower";
 import FooterSection from "@/components/layout/FooterSection";
 import ScrollToTop from "@/components/common/ScrollToTop";
+import ChatWidget from "@/components/ChatWidget";
+import WhatsAppFloating from "@/components/common/WhatsAppFloating";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,7 +49,9 @@ export default function RootLayout({ children }) {
         <main className="">
           {children}
         </main>
-              <FooterSection />
+        <WhatsAppFloating />
+        <ChatWidget />
+        <FooterSection />
       </body>
     </html>
   );

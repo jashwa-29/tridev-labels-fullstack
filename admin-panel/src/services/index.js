@@ -6,3 +6,5 @@ export * from './quote.service';
 export * from './service.service';
 export * from './special.service';
 export * from './testimonial.service';
+export * from './history.service';
+

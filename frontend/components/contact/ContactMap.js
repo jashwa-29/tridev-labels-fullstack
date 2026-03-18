@@ -5,13 +5,15 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight, Compass, ShieldCheck, Map } from 'lucide-react';
 
-gsap.registerPlugin(ScrollTrigger);
 
 export default function ContactMap() {
   const containerRef = useRef(null);
   const cardRef = useRef(null);
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
+    }
     const ctx = gsap.context(() => {
       // 1. Entrance Animation for Map Container
       gsap.from(".map-reveal", {

@@ -31,7 +31,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   res.json({
     success: true,
     token,
-    user: { id: user._id, email: user.email, role: user.role }
+    user: { id: user._id, _id: user._id, email: user.email, role: user.role }
   });
 });
 
@@ -183,5 +183,74 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
     success: true,
     token: newToken,
     user: { id: user._id, email: user.email, role: user.role }
+  });
+});
+
+// @desc    Create a new Admin (Super Admin only)
+// @route   POST /api/auth/create-admin
+// @access  Private (Super Admin)
+exports.createAdmin = asyncHandler(async (req, res, next) => {
+  const { name, email, password } = req.body;
+
+  // Check if user exists
+  const userExists = await User.findOne({ email });
+
+  if (userExists) {
+    return next(new ErrorResponse('User already exists', 400));
+  }
+
+  // Create user with 'admin' role
+  const user = await User.create({
+    name,
+    email,
+    password,
+    role: 'admin' 
+  });
+
+  res.status(201).json({
+    success: true,
+    data: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    }
+  });
+});
+
+// @desc    Get all Admins (Super Admin only)
+// @route   GET /api/auth/admins
+// @access  Private (Super Admin)
+exports.getAllAdmins = asyncHandler(async (req, res, next) => {
+  // Fetch users with role 'admin'
+  const users = await User.find({ role: 'admin' }).select('-password');
+
+  res.status(200).json({
+    success: true,
+    count: users.length,
+    data: users
+  });
+});
+
+// @desc    Delete an Admin (Super Admin only)
+// @route   DELETE /api/auth/admin/:id
+// @access  Private (Super Admin)
+exports.deleteAdmin = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    return next(new ErrorResponse('User not found', 404));
+  }
+
+  // Prevent deleting self or other superadmins (optional safety)
+  if (user.role === 'superadmin') {
+     return next(new ErrorResponse('Cannot delete a Super Admin', 403));
+  }
+
+  await user.deleteOne();
+
+  res.status(200).json({
+    success: true,
+    data: {}
   });
 });
