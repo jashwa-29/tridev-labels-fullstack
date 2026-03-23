@@ -58,7 +58,7 @@ export default function ContactMap() {
           
           {/* Iframe with Cinematic grayscale filter that saturates on hover */}
           <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15551.488347895473!2d80.2443!3d12.9649!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a525d8866165d3d%3A0xe6712edaa245e676!2sNehru%20Nagar%2C%20Kottivakkam%2C%20Chennai%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.9525307887525!2d80.24502027512287!3d12.974887987340843!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a525d68f9088c4d%3A0xd3a950365da09a38!2sTrridev%20Labelss!5e0!3m2!1sen!2sin!4v1773919143182!5m2!1sen!2sin" 
             width="100%" 
             height="100%" 
             style={{ border: 0, filter: 'grayscale(1) contrast(1.1) brightness(0.9)' }} 
@@ -88,12 +88,12 @@ export default function ContactMap() {
               
               <p className="text-gray-600 font-light text-sm leading-relaxed">
                 Visit our state-of-the-art facility located in the industrial heart 
-                of Nehru Nagar. We operate 24/7 to service global demand.
+                of Nehru Nagar. We are open from 10:00 to 18:30, Monday through Saturday.
               </p>
 
               <div className="pt-4 flex flex-col gap-4">
                  <a 
-                   href="https://goo.gl/maps/example" 
+                   href="https://www.google.com/maps/place/Trridev+Labelss/@12.974888,80.2475952,17z/data=!3m1!4b1!4m6!3m5!1s0x3a525d68f9088c4d:0xd3a950365da09a38!8m2!3d12.974888!4d80.2475952!16s%2Fg%2F1tr7gt9l?hl=en&entry=ttu&g_ep=EgoyMDI2MDMxNS4wIKXMDSoASAFQAw%3D%3D" 
                    target="_blank" 
                    rel="noopener noreferrer"
                    className="group/btn relative inline-flex items-center justify-between py-5 px-8 bg-gray-900 text-white rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-[#E32219] transition-all duration-500 shadow-xl overflow-hidden"

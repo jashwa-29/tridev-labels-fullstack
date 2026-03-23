@@ -1,0 +1,329 @@
+/* Admin Panel CSS - Scoped styles for the admin dashboard */
+
+/* ====================================
+   SIDEBAR COMPONENTS
+   ==================================== */
+.admin-sidebar-group {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.admin-sidebar-group-title {
+  padding: 0.5rem 1rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: rgb(148 163 184);
+}
+
+.admin-sidebar-item {
+  display: flex;
+  height: 44px;
+  width: 100%;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 0.75rem;
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgb(71 85 105);
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.admin-sidebar-item:hover {
+  background-color: rgb(248 250 252);
+  color: rgb(0 0 0);
+}
+
+.admin-sidebar-item.active {
+  background-color: rgb(254 242 242);
+  color: rgb(220 38 38);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.admin-sidebar-item.active svg {
+  color: rgb(220 38 38);
+}
+
+/* ====================================
+   BUTTONS
+   ==================================== */
+.admin-btn-primary {
+  display: flex;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  background-color: rgb(220 38 38);
+  padding: 0 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: white;
+  box-shadow: 0 10px 15px -3px rgba(220,38,38,0.2);
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.admin-btn-primary:hover {
+  background-color: rgb(185 28 28);
+  box-shadow: 0 10px 15px -3px rgba(185,28,28,0.3);
+}
+
+.admin-btn-primary:active {
+  transform: scale(0.98);
+}
+
+.admin-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-btn-secondary {
+  display: flex;
+  height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background-color: white;
+  padding: 0 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: black;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.admin-btn-secondary:hover {
+  background-color: rgb(248 250 252);
+}
+
+.admin-btn-ghost {
+  display: flex;
+  height: 2.5rem;
+  width: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  color: rgb(100 116 139);
+  transition: all 0.2s;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.admin-btn-ghost:hover {
+  background-color: rgb(241 245 249);
+  color: black;
+}
+
+/* ====================================
+   FORM / INPUT
+   ==================================== */
+.admin-input-field {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background-color: rgb(248 250 252);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: black;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.admin-input-field-icon {
+  padding-left: 3rem !important;
+}
+
+.admin-input-field:focus {
+  border-color: rgb(239 68 68);
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(239,68,68,0.1);
+}
+
+/* ====================================
+   CARDS / TABLE
+   ==================================== */
+.admin-card {
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid rgb(241 245 249);
+  background-color: white;
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+}
+
+.admin-card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+.admin-table-container {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid rgb(241 245 249);
+  background-color: white;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.admin-table {
+  width: 100%;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.admin-table-header {
+  border-bottom: 1px solid rgb(241 245 249);
+  background-color: rgba(248,250,252,0.5);
+}
+
+.admin-table-head {
+  padding: 1rem 1.5rem;
+  font-weight: 700;
+  color: rgb(100 116 139);
+}
+
+.admin-table-row {
+  border-bottom: 1px solid rgb(241 245 249);
+  transition: colors 0.2s;
+}
+
+.admin-table-row:last-child {
+  border-bottom: none;
+}
+
+.admin-table-row:hover {
+  background-color: rgba(248,250,252,0.5);
+}
+
+.admin-table-cell {
+  padding: 1rem 1.5rem;
+  font-weight: 500;
+  color: rgb(51 65 85);
+}
+
+/* ====================================
+   BADGES
+   ==================================== */
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 0.125rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.admin-badge-red {
+  background-color: rgb(254 226 226);
+  color: rgb(185 28 28);
+}
+
+.admin-badge-green {
+  background-color: rgb(209 250 229);
+  color: rgb(6 95 70);
+}
+
+/* ====================================
+   AG GRID OVERRIDES
+   ==================================== */
+.ag-theme-alpine {
+  --ag-border-radius: 0;
+  --ag-header-height: 56px;
+  --ag-header-foreground-color: rgb(71 85 105);
+  --ag-header-background-color: rgb(248 250 252);
+  --ag-odd-row-background-color: rgb(255 255 255);
+  --ag-row-hover-color: rgb(248 250 252);
+  --ag-border-color: rgb(226 232 240);
+  --ag-row-border-color: rgb(241 245 249);
+  --ag-font-family: inherit;
+  --ag-font-size: 14px;
+  --ag-foreground-color: rgb(51 65 85);
+}
+
+.ag-theme-alpine .ag-header {
+  border-bottom: 2px solid rgb(226 232 240);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+
+.ag-theme-alpine .ag-header-cell {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.ag-theme-alpine .ag-cell {
+  padding-left: 16px;
+  padding-right: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.ag-theme-alpine .ag-row {
+  border-bottom: 1px solid rgb(241 245 249);
+}
+
+.ag-theme-alpine .ag-paging-panel {
+  border-top: 2px solid rgb(226 232 240);
+  padding: 16px;
+  font-weight: 600;
+  color: rgb(71 85 105);
+}
+
+.ag-theme-alpine .ag-paging-button {
+  border-radius: 8px;
+  margin: 0 4px;
+}
+
+/* ====================================
+   REACT QUILL OVERRIDES
+   ==================================== */
+.ql-toolbar.ql-snow {
+  border-radius: 1.5rem 1.5rem 0 0;
+  border: none !important;
+  border-bottom: 1px solid rgb(241 245 249) !important;
+  background-color: rgba(248,250,252,0.5);
+  padding: 1rem 1.5rem;
+}
+
+.ql-container.ql-snow {
+  border: none !important;
+  font-family: inherit;
+}
+
+.ql-editor {
+  min-height: 200px;
+  padding: 2.5rem 2rem;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgb(51 65 85);
+}
+
+.ql-editor.ql-blank::before {
+  left: 2rem;
+  font-style: italic;
+  color: rgb(203 213 225);
+}
+
+/* ====================================
+   TITLE
+   ==================================== */
+.admin-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: black;
+}

@@ -1,11 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import Header from "@/components/layout/Header";
-import CursorFollower from "@/components/layout/CursorFollower";
-import FooterSection from "@/components/layout/FooterSection";
-import ScrollToTop from "@/components/common/ScrollToTop";
-import ChatWidget from "@/components/ChatWidget";
-import WhatsAppFloating from "@/components/common/WhatsAppFloating";
+import "./(public)/globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  metadataBase: new URL('https://tridevlabels.com'), // Replace with actual domain
+  metadataBase: new URL('https://tridevlabels.com'),
   title: "Tridev Labels - Precision Printing",
   description: "Excellence in label printing and packaging.",
   icons: {
@@ -40,18 +34,8 @@ export default function RootLayout({ children }) {
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
         <link rel="dns-prefetch" href="https://i.pinimg.com" />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {/* <CursorFollower /> */}
-        <Header />
-        <ScrollToTop />
-        <main className="">
-          {children}
-        </main>
-        <WhatsAppFloating />
-        <ChatWidget />
-        <FooterSection />
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {children}
       </body>
     </html>
   );

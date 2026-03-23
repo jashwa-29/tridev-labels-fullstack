@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Phone, Mail, MapPin, Send, ArrowUpRight } from 'lucide-react';
+import { Phone, Mail, MapPin, Send, ArrowUpRight, Clock } from 'lucide-react';
 import { quoteService } from '@/services/quote.service';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -184,28 +184,36 @@ export default function ContactSection() {
 
   const contactDetails = [
     {
+      icon: <MapPin className="w-5 h-5" />,
+      label: "Operational HQ",
+      value: "Kottivakkam, Chennai",
+      sub: "Door No: A115 & B115, Nehru Nagar 2nd Main Road, 7th Link St, Nehru Nagar Industrial Area, Kottivakkam, OMR, Chennai – 600041, TN, India",
+      actionLabel: "Get Directions",
+      href: "https://www.google.com/maps/place/Trridev+Labelss/@12.974888,80.2475952,17z/data=!3m1!4b1!4m6!3m5!1s0x3a525d68f9088c4d:0xd3a950365da09a38!8m2!3d12.974888!4d80.2475952!16s%2Fg%2F1tr7gt9l?hl=en&entry=ttu"
+    },
+    {
       icon: <Phone className="w-5 h-5" />,
-      label: "Talk to Us",
-      value: "+91 91500 01103",
-      sub: "Mon-Fri, 9am - 6pm IST",
+      label: "Call Engineering",
+      value: "+91 96000 07995",
+      sub: "Mobile: +91 99406 22559 | Tel: 044-47839627",
       actionLabel: "Call Now",
-      href: "tel:+919150001103"
+      href: "tel:+919600007995"
     },
     {
       icon: <Mail className="w-5 h-5" />,
-      label: "Email Support",
-      value: "info@trridevlabels.com",
-      sub: "Average response: 24h",
+      label: "Technical Inquiries",
+      value: "Kiruba@trridevlabelss.com",
+      sub: "General: info@trridevlabels.com",
       actionLabel: "Send Email",
-      href: "mailto:info@trridevlabels.com"
+      href: "mailto:Kiruba@trridevlabelss.com"
     },
     {
-      icon: <MapPin className="w-5 h-5" />,
-      label: "Visit HQ",
-      value: "Chennai, Tamil Nadu",
-      sub: "Industrial Estate, Nehru Nagar",
-      actionLabel: "Get Directions",
-      href: "https://maps.google.com"
+      icon: <Clock className="w-5 h-5" />,
+      label: "Working Hours",
+      value: "10:00 – 18:30",
+      sub: "Monday – Saturday | Sunday: Closed",
+      actionLabel: "Visit Us",
+      href: "#map"
     }
   ];
 

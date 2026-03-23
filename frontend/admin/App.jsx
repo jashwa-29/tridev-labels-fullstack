@@ -1,0 +1,84 @@
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
+import { ThemeProvider } from "@/contexts/theme-context";
+import Layout from "@/routes/layout";
+import DashboardPage from "./routes/Pages/DashboardPage";
+import GalleryPage from "./routes/Pages/GalleryPage";
+import SpecialsPromotionPage from "./routes/Pages/SpecialsPromotionPage";
+import LoginPage from "./routes/Pages/LoginPage";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import BlogPage from "./routes/Pages/BlogPage";
+import BlogDetails from './routes/Pages/BlogDetails';
+import ServicesPage from "./routes/Pages/ServicesPage";
+import ContactPage from "./routes/Pages/ContactPage";
+import QuotesPage from "./routes/Pages/QuotesPage";
+import TestimonialsPage from "./routes/Pages/TestimonialsPage";
+import ForgotPasswordPage from "./routes/Pages/ForgotPasswordPage";
+import ResetPasswordPage from "./routes/Pages/ResetPasswordPage";
+import SettingsPage from "./routes/Pages/SettingsPage";
+import HistoryPage from "./routes/Pages/HistoryPage";
+import GlobalError from "./routes/Pages/GlobalError";
+import ManageAdminsPage from "./routes/Pages/ManageAdminsPage";
+import LiveChatPage from "./routes/Pages/LiveChatPage";
+import ChatHistoryPage from "./routes/Pages/ChatHistoryPage";
+import ChatSettingsPage from "./routes/Pages/ChatSettingsPage";
+
+function App() {
+    const router = createBrowserRouter([
+        {
+            path: "/",
+            errorElement: <GlobalError />,
+            children: [
+                {
+                    index: true,
+                    element: <LoginPage />,
+                },
+                {
+                    path: "forgot-password",
+                    element: <ForgotPasswordPage />,
+                },
+                {
+                    path: "reset-password",
+                    element: <ResetPasswordPage />,
+                },
+                {
+                    element: <ProtectedRoute />,
+                    children: [
+                        {
+                            path: "dashboard",
+                            element: <Layout />,
+                            children: [
+                                { index: true, element: <DashboardPage /> },
+                                { path: "gallery", element: <GalleryPage /> },
+                                { path: "specials-promotion", element: <SpecialsPromotionPage /> },
+                                { path: "blogs", element: <BlogPage /> },
+                                { path: "blogs/:slug", element: <BlogDetails /> },
+                                { path: "services", element: <ServicesPage /> },
+                                { path: "contact", element: <ContactPage /> },
+                                { path: "quotes", element: <QuotesPage /> },
+                                { path: "testimonials", element: <TestimonialsPage /> },
+                                { path: "history", element: <HistoryPage /> },
+                                { path: "settings", element: <SettingsPage /> },
+                                { path: "admins", element: <ManageAdminsPage /> },
+                                { path: "chat", element: <LiveChatPage /> },
+                                { path: "chat/history", element: <ChatHistoryPage /> },
+                                { path: "chat/settings", element: <ChatSettingsPage /> },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    path: "*",
+                    element: <GlobalError />, // Using GlobalError as Not Found too
+                }
+            ]
+        }
+    ]);
+
+    return (
+        <ThemeProvider storageKey="theme">
+            <RouterProvider router={router} />
+        </ThemeProvider>
+    );
+}
+
+export default App;
