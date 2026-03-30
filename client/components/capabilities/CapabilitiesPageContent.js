@@ -105,7 +105,7 @@ export default function CapabilitiesPageContent({ galleryItems = [] }) {
                 subtitle: "Production",
                 desc: "Our fully integrated manufacturing ecosystem covers the entire lifecycle of a label—from initial blueprint conceptualization and material selection to high-precision flexographic printing and final automated converting. By housing every stage under a single roof, we eliminate third-party logistics variables, ensuring absolute quality control, rapid prototyping timelines, and a zero-compromise approach to industrial specifications.",
                 features: ["Integrated Design Workflow", "Direct QA Protocol Control", "Zero-Latency Dispatch Logs", "Rapid Engineering Response"],
-                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1000",
+                image: "/capabilities-images/dna-inhouse-production.png",
                 icon: Maximize,
                 spec: "100% Controlled Manufacturing Environment",
                 metrics: "Operational Status: High Precision"
@@ -116,7 +116,7 @@ export default function CapabilitiesPageContent({ galleryItems = [] }) {
                 subtitle: "Technology",
                 desc: "We deploy a fleet of cutting-edge Nilpeter and Mark Andy multi-color flexographic lines, seamlessly integrated with digital variable data units for unmatched serial intelligence. Our facility is powered by high-frequency LED curing systems that provide instant polymerization, enabling us to print on complex synthetic substrates with perfect registration and consistent color depth across high-volume production runs.",
                 features: ["Multi-Color Flexo Lines", "UV-LED High-Speed Curing", "Digital Hybrid Print Units", "Automated Vision Inspection"],
-                image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=1000",
+                image: "/capabilities-images/dna-advanced-technology.png",
                 icon: Settings,
                 spec: "Intelligent Multi-Platform Agility",
                 metrics: "Registration Accuracy: ±0.05mm"
@@ -127,7 +127,7 @@ export default function CapabilitiesPageContent({ galleryItems = [] }) {
                 subtitle: "Durability",
                 desc: "Engineered for the most unforgiving environments, our label solutions utilize tier-1 automotive-grade substrates and high-performance adhesives. These materials are rigorously tested to survive extreme temperature fluctuations, harsh chemical exposure (including solvents and fuels), and intense mechanical abrasion. We ensure that your critical identification data remains legible and intact through the entire surface lifecycle.",
                 features: ["Automotive Tier-1 Standards", "Chemical & Solvent Resistance", "Extreme Thermal Stability", "Anti-Microbial Material Options"],
-                image: "https://images.unsplash.com/photo-1534073828943-f801091bb18c?auto=format&fit=crop&q=80&w=1000",
+                image: "/capabilities-images/dna-industrial-durability.png",
                 icon: Zap,
                 spec: "High-Performance Engineered Materials",
                 metrics: "Certified Standard: ISO 15378"
@@ -135,7 +135,7 @@ export default function CapabilitiesPageContent({ galleryItems = [] }) {
             ].map((item, i) => (
               <div 
                 key={i} 
-                className="reveal group relative flex-1 hover:flex-[6] transition-all duration-700 ease-[cubic-bezier(0.25,1,0.3,1)] overflow-hidden rounded-[2.5rem] border border-white/10 cursor-pointer"
+                className="reveal group relative z-10 flex-1 min-h-[300px] hover:flex-[6] transition-all duration-700 ease-[cubic-bezier(0.25,1,0.3,1)] overflow-hidden rounded-[2.5rem] border border-white/10 cursor-pointer"
               >
                 <Image 
                   src={item.image} 
@@ -143,12 +143,11 @@ export default function CapabilitiesPageContent({ galleryItems = [] }) {
                   fill 
                   className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100"
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  priority={i === 0}
                 />
                 
-                {/* Overlays */}
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/70 transition-colors duration-700"></div>
-                <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent"></div>
+                {/* Overlays - Lightened */}
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/50 transition-colors duration-700"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
                 
                 {/* Technical Scanner Ring */}
                 <div className="absolute top-10 left-10 w-16 h-16 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-700 delay-100 backdrop-blur-md bg-white/5 rounded-full border border-white/10">
@@ -217,13 +216,13 @@ export default function CapabilitiesPageContent({ galleryItems = [] }) {
         {/* Optimized Background Image - Synced with WhyChooseSection */}
         <div className="absolute inset-0">
           <Image 
-            src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?auto=format&fit=crop&q=80&w=2000" 
+            src="/capabilities-images/flexo-background.png" 
             alt="Flexo Industrial Background" 
             fill 
             className="object-cover"
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-black/70"></div>
+          <div className="absolute inset-0 bg-black/40"></div>
         </div>
 
         {/* Technical HUD Overlay - Subtle */}

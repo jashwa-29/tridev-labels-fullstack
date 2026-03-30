@@ -13,73 +13,73 @@ export default function AboutApproach() {
   const columnsRef = useRef([]);
 
   useEffect(() => {
-    // 1200ms Performant Buffer: Delay engine startup to secure LCP
-    const timer = setTimeout(() => {
-      let ctx;
-      const observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          ctx = gsap.context(() => {
-            // Desktop Parallax Columns
-            if (window.innerWidth >= 1024) {
-               gsap.to(".col-slow", {
-                  y: -50,
-                  ease: "none",
-                  scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                  }
-               });
-               
-               gsap.to(".col-medium", {
-                  y: -120,
-                  ease: "none",
-                  scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                  }
-               });
+    let ctx;
 
-               gsap.to(".col-fast", {
-                  y: -200,
-                  ease: "none",
-                  scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                  }
-               });
+    // Pre-hide cards immediately so there's no flash of visible content
+    gsap.set(".approach-card", { opacity: 0, y: 50 });
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        ctx = gsap.context(() => {
+          // Desktop Parallax Columns
+          if (window.innerWidth >= 1024) {
+             gsap.to(".col-slow", {
+                y: -50,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: containerRef.current,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: true
+                }
+             });
+             
+             gsap.to(".col-medium", {
+                y: -120,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: containerRef.current,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: true
+                }
+             });
+
+             gsap.to(".col-fast", {
+                y: -200,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: containerRef.current,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: true
+                }
+             });
+          }
+          
+          // Reveal Animation
+          gsap.to(".approach-card", {
+            y: 0,
+            opacity: 1,
+            duration: 1.2,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "top 75%"
             }
-            
-            // Reveal Animation
-            gsap.from(".approach-card", {
-              y: 50,
-              opacity: 0,
-              duration: 1.2,
-              stagger: 0.1,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: containerRef.current,
-                start: "top 75%"
-              }
-            });
-          }, containerRef);
-        } else {
-          if (ctx) ctx.revert();
-        }
-      }, { rootMargin: "100px", threshold: 0.01 });
+          });
+        }, containerRef);
+      } else {
+        if (ctx) ctx.revert();
+      }
+    }, { rootMargin: "100px", threshold: 0.01 });
 
-      if (containerRef.current) observer.observe(containerRef.current);
-      window._approachObserver = observer;
-    }, 1200);
+    if (containerRef.current) observer.observe(containerRef.current);
 
     return () => {
-      clearTimeout(timer);
-      if (window._approachObserver) window._approachObserver.disconnect();
+      observer.disconnect();
+      if (ctx) ctx.revert();
     };
   }, []);
 
@@ -113,7 +113,7 @@ export default function AboutApproach() {
               <div className="approach-card space-y-4">
                  <div className="aspect-4/5 rounded-3xl overflow-hidden shadow-xl relative">
                     <Image 
-                       src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&q=80&w=1000" 
+                       src="/about-images/approach-calibration.png" 
                        alt="Color Calibration" 
                        fill
                        sizes="(max-width: 768px) 100vw, 33vw"
@@ -134,7 +134,7 @@ export default function AboutApproach() {
               <div className="approach-card space-y-4">
                  <div className="aspect-4/5 rounded-3xl overflow-hidden shadow-xl relative">
                     <Image 
-                       src="/label-printing-approach.png" 
+                       src="/about-images/approach-industrial.png" 
                        alt="Industrial Execution" 
                        fill
                        sizes="(max-width: 768px) 100vw, 33vw"
@@ -155,7 +155,7 @@ export default function AboutApproach() {
               <div className="approach-card space-y-4">
                  <div className="aspect-4/5 rounded-3xl overflow-hidden shadow-xl relative">
                     <Image 
-                       src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1000" 
+                       src="/about-images/approach-quality.png" 
                        alt="Quality Assurance" 
                        fill
                        sizes="(max-width: 768px) 100vw, 33vw"
@@ -211,11 +211,9 @@ export default function AboutApproach() {
 
              <div className="approach-card aspect-4/5 rounded-[32px] overflow-hidden shadow-2xl relative group">
                 <Image 
-                   src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&q=80&w=1000" 
+                   src="/about-images/approach-calibration.png" 
                    alt="Color Calibration" 
                    fill
-                   priority
-                   fetchPriority="high"
                    sizes="(max-width: 768px) 100vw, 33vw"
                    className="w-full h-full object-cover grayscale brightness-90 transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110"
                 />
@@ -234,11 +232,9 @@ export default function AboutApproach() {
           <div className="col-medium space-y-8 pt-24">
              <div className="approach-card aspect-square rounded-[32px] overflow-hidden shadow-2xl relative group">
                 <Image 
-                   src="/label-printing-approach.png" 
+                   src="/about-images/approach-execution.png" 
                    alt="Industrial Machine" 
                    fill
-                   priority
-                   fetchPriority="high"
                    sizes="(max-width: 768px) 100vw, 33vw"
                    className="w-full h-full object-cover grayscale brightness-90 transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110"
                 />
@@ -276,7 +272,7 @@ export default function AboutApproach() {
 
              <div className="approach-card aspect-5/4 rounded-[32px] overflow-hidden shadow-2xl relative group">
                 <Image 
-                   src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1000" 
+                   src="/about-images/approach-quality.png" 
                    alt="Quality Check" 
                    fill
                    sizes="(max-width: 768px) 100vw, 33vw"

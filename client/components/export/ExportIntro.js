@@ -129,7 +129,7 @@ export default function ExportIntro() {
                 className="relative aspect-[3/4] md:aspect-square rounded-[60px] overflow-hidden shadow-2xl group cursor-none"
               >
                 <Image 
-                  src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d" 
+                  src="/export-images/export-hero.png" 
                   alt="Modern Logistics" 
                   fill
                   priority

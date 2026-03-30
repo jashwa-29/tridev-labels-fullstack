@@ -280,8 +280,8 @@ export default function HistoryTimeline() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen pb-24 pt-0 px-4 bg-[url('https://peppy-moonbeam-9fe49c.netlify.app/images/background-img-1.jpeg')] bg-cover bg-center bg-fixed overflow-x-hidden">
-      <div className="absolute inset-0 bg-[#0a0a0a]/80 z-0 pointer-events-none" />
+    <section ref={sectionRef} className="relative min-h-screen pb-24 pt-0 px-4 bg-[url('/about-images/dark-section-bg.png')] bg-cover bg-center bg-fixed overflow-x-hidden">
+      <div className="absolute inset-0 bg-[#0a0a0a]/70 z-0 pointer-events-none" />
       {/* Explosion Effect */}
       <AnimatePresence>
         {showExplosion && (

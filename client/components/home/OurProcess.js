@@ -16,7 +16,7 @@ export default function OurProcessSection() {
       title: "The Blueprint",
       subtitle: "Discovery & Analysis",
       description: "Every masterpiece begins with understanding. We analyze your product's DNA—from surface tensions to environmental stressors—to engineer a label that doesn't just stick, but performs.",
-      image: "https://i.pinimg.com/1200x/ca/2f/39/ca2f393d4beeb659a5de54ba0d76d1b4.jpg",
+      image: "/home-images/process-blueprint.png",
       details: ["Substrate Chemistry", "Lifecycle Mapping", "Compliance Matrix"]
     },
     {
@@ -24,7 +24,7 @@ export default function OurProcessSection() {
       title: "The Craft",
       subtitle: "Precision Engineering",
       description: "Complexity made simple. Through high-frequency flexographic printing and microscopic color calibration, we translate your brand's vision into tangible, high-resolution reality.",
-      image: "https://i.pinimg.com/736x/ed/5e/6a/ed5e6adf3824febf05cbbea5290abd22.jpg",
+      image: "/home-images/process-craft.png",
       details: ["Pantone Accuracy", "Material Durability", "In-line Finishing"]
     },
     {
@@ -32,7 +32,7 @@ export default function OurProcessSection() {
       title: "The Seal",
       subtitle: "Quality Mastery",
       description: "The final safeguard. Each batch undergoes automated vision inspection and stress testing, ensuring that only perfection enters your supply chain.",
-      image: "https://i.pinimg.com/1200x/1d/03/88/1d03881315a20e55d2e35d69c2aafe27.jpg",
+      image: "/home-images/process-seal.png",
       details: ["Automated QC", "Batch Traceability", "Strategic Logistics"]
     }
   ];

@@ -70,7 +70,7 @@ export default function AboutSection() {
             {/* Main Image - Center Background */}
             <div className="absolute top-[10%] left-[10%] w-[70%] h-[70%] rounded-2xl overflow-hidden shadow-2xl z-10 parallax-img">
               <Image 
-                src="https://i.pinimg.com/1200x/ea/9e/20/ea9e205b68c315a7a39cd685d1800d1d.jpg" 
+                src="/home-images/about-hero.png" 
                 alt="Industrial Printing Press"
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
@@ -81,7 +81,7 @@ export default function AboutSection() {
             {/* Image 2 - Top Right Overlay */}
             <div className="absolute top-0 right-0 w-[45%] h-[40%] rounded-2xl overflow-hidden shadow-2xl z-20 parallax-img border-4 sm:border-8 border-[#fafafa]">
               <Image 
-                src="https://i.pinimg.com/1200x/14/d6/f3/14d6f3022120dcf6712edaa245e67653.jpg" 
+                src="/home-images/about-approach-1.png" 
                 alt="Digital Label Concept"
                 fill
                 loading="lazy"
@@ -93,7 +93,7 @@ export default function AboutSection() {
             {/* Image 3 - Bottom Left Overlay */}
             <div className="absolute bottom-[5%] left-0 w-[42%] h-[38%] rounded-2xl overflow-hidden shadow-2xl z-30 parallax-img border-4 sm:border-8 border-[#fafafa]">
               <Image 
-                src="https://i.pinimg.com/1200x/04/28/b9/0428b900d699a1410449ae05ccb12aa4.jpg" 
+                src="/home-images/about-approach-2.png" 
                 alt="Quality Labels"
                 fill
                 loading="lazy"
@@ -105,7 +105,7 @@ export default function AboutSection() {
             {/* Image 4 - Floating Detail */}
             <div className="absolute bottom-0 right-[15%] w-[35%] h-[30%] rounded-2xl overflow-hidden shadow-2xl z-40 parallax-img border-4 sm:border-8 border-[#fafafa] hidden sm:block">
               <Image 
-                src="https://i.pinimg.com/736x/64/cb/80/64cb8086e52ef8f1096f3d14e6e4194c.jpg" 
+                src="/home-images/about-approach-3.png" 
                 alt="Detailed Texture"
                 fill
                 loading="lazy"

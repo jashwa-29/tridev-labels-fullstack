@@ -64,8 +64,8 @@ export default function AboutValues() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative py-16 md:py-24 lg:py-30 bg-[url('https://peppy-moonbeam-9fe49c.netlify.app/images/background-img-1.jpeg')] bg-cover bg-center bg-fixed overflow-hidden">
-      <div className="absolute inset-0 bg-[#0a0a0a]/80 z-0 pointer-events-none" />
+    <section ref={sectionRef} className="relative py-16 md:py-24 lg:py-30 bg-[url('/about-images/dark-section-bg.png')] bg-cover bg-center bg-fixed overflow-hidden">
+      <div className="absolute inset-0 bg-[#0a0a0a]/70 z-0 pointer-events-none" />
       
 
 

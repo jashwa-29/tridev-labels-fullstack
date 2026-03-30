@@ -57,7 +57,7 @@ export default function PageHeader({
       <div className="absolute inset-0 z-0">
         <div ref={bgRef} className="absolute -top-[20%] left-0 w-full h-[140%]">
           <Image
-            src={getImgUrl(image) || "https://peppy-moonbeam-9fe49c.netlify.app/images/background-img-1.jpeg"}
+            src={getImgUrl(image) || "/common-images/page-header-bg.png"}
             alt={title || "Page Header Background"}
             fill
             priority

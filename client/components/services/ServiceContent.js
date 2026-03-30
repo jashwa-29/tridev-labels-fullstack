@@ -231,7 +231,7 @@ export default function ServiceContent({ service, slug }) {
                     {/* Secondary Image - Top Left (Static for Elite Aesthetic) */}
                     <div className="hidden md:block absolute top-[15%] left-[5%] w-[35%] h-[30%] rounded-2xl md:rounded-3xl overflow-hidden shadow-lg md:shadow-xl z-30 group border-2 md:border-4 border-white">
                       <Image 
-                        src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80" 
+                        src="/service-images/service-mosaic-upper.png" 
                         alt="Fundamental Details - Technical Insight"
                         fill
                         unoptimized={true}
@@ -243,7 +243,7 @@ export default function ServiceContent({ service, slug }) {
                     {/* Accent Image - Bottom Left (Static for Consistency) */}
                     <div className="hidden md:block absolute bottom-0 left-0 w-[55%] h-[45%] rounded-2xl md:rounded-[40px] overflow-hidden shadow-lg md:shadow-2xl z-10 group border-2 md:border-4 border-white">
                       <Image 
-                        src="https://images.unsplash.com/photo-1565034946487-077786996e27?auto=format&fit=crop&q=80" 
+                        src="/service-images/service-mosaic-lower.png" 
                         alt="Fundamental Details - Industry standard"
                         fill
                         unoptimized={true}

@@ -61,14 +61,14 @@ export default function WhyChooseSection() {
       {/* Optimized Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://peppy-moonbeam-9fe49c.netlify.app/images/background-img-1.jpeg"
+          src="/home-images/why-choose-us-bg.png"
           alt="Why Choose Us Background"
           fill
           loading="lazy"
           sizes="(max-width: 1200px) 100vw, 1920px"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-black/70"></div>
+        <div className="absolute inset-0 bg-black/50"></div>
       </div>
 
       <div ref={contentRef} className="container mx-auto px-4 md:px-8 relative z-10">

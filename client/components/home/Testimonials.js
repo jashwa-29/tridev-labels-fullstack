@@ -173,7 +173,7 @@ export default function Testimonials() {
                         <span className="w-6 h-[1.5px] bg-[#E32219]"></span>
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#E32219]">Industrial Impact</span>
                       </div>
-                      <p className="text-xl md:text-2xl lg:text-3xl text-gray-800 leading-[1.4] font-light italic">
+                      <p className="text-xl md:text-xl lg:text-xl text-gray-800 leading-[1.4] font-light italic">
                         "{testimonials[current].text}"
                       </p>
                     </div>
