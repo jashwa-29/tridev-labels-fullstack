@@ -99,7 +99,7 @@ const LiquidGlassCard = ({ children, isActive, color, index, isLeft }) => {
       className="relative"
       initial={{ opacity: 0, y: 100, scale: 0.95 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: false, margin: "-100px" }}
+      viewport={{ once: false, margin: "0px" }}
       transition={{
         duration: 0.8,
         delay: index * 0.1,
@@ -120,7 +120,7 @@ const LiquidGlassCard = ({ children, isActive, color, index, isLeft }) => {
 
       {/* Pure Glassy Background - Revealed via Printer clip-path */}
       <motion.div
-        className="absolute inset-0 rounded-[32px] overflow-hidden bg-white/[0.04] border border-white/10"
+        className="absolute inset-0 rounded-[32px] overflow-hidden bg-white/[0.04] border border-white/10 backdrop-blur-md"
         initial={{ clipPath: "inset(0 0 100% 0)" }}
         whileInView={{ clipPath: "inset(0 0 0% 0)" }}
         viewport={{ once: true, amount: 0.1 }}
@@ -133,7 +133,7 @@ const LiquidGlassCard = ({ children, isActive, color, index, isLeft }) => {
       
       {/* Content wrapper with proper breathable padding */}
       <motion.div 
-        className="relative z-10 p-6 md:p-10 h-full flex flex-col overflow-visible"
+        className="relative z-10 p-5 md:p-10 h-full flex flex-col overflow-visible"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: false }}
@@ -399,7 +399,7 @@ export default function HistoryTimeline() {
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* Header with Liquid Glass Effect */}
         <motion.div
-          className="timeline-header text-center mb-20"
+          className="timeline-header text-center mb-10 md:mb-20"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false }}
@@ -459,7 +459,7 @@ export default function HistoryTimeline() {
         {/* Timeline Container */}
         <div ref={timelineRef} className="relative">
           {/* Central Timeline Line with Liquid Flow */}
-          <div className="absolute left-[30px] md:left-1/2 transform md:-translate-x-1/2 w-[2px] h-full">
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-[2px] h-full">
             <motion.div
               className="timeline-line w-full h-full bg-gradient-to-b from-transparent via-[#E32219] to-transparent origin-top"
               initial={{ scaleY: 0 }}
@@ -490,12 +490,12 @@ export default function HistoryTimeline() {
               <div
                 key={index}
                 ref={(el) => (itemsRef.current[index] = el)}
-                className={`relative flex flex-col md:flex-row items-start gap-6 md:gap-12 mb-20 md:mb-32 ${
+                className={`relative flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12 mb-20 md:mb-32 ${
                   isLeft ? "md:flex-row" : "md:flex-row-reverse"
                 }`}
               >
                 {/* Timeline Marker with Liquid Effect */}
-                <div className="absolute left-[26px] md:left-1/2 transform md:-translate-x-1/2 z-20">
+                <div className="md:absolute static left-1/2 transform md:-translate-x-1/2 z-20 mb-4 md:mb-0">
                   <motion.div
                     className="cursor-pointer relative"
                     whileHover={{ scale: 1.2 }}
@@ -521,7 +521,7 @@ export default function HistoryTimeline() {
                 </div>
 
                 {/* Liquid Glass Card */}
-                <div className="w-full md:w-[calc(50%-2rem)] ml-[52px] md:ml-0">
+                <div className="w-full md:w-[calc(50%-2rem)] mx-auto md:mx-0">
                   <LiquidGlassCard
                     isActive={isActive}
                     color={item.color}
@@ -551,7 +551,7 @@ export default function HistoryTimeline() {
                             src={item.image}
                             alt={item.title}
                             fill
-                            sizes="(max-width: 768px) 100vw, 33vw"
+                            sizes="(max-width: 768px) 90vw, (max-width: 1200px) 40vw, 30vw"
                             className="object-cover"
                             onLoad={() => handleImageLoad(index)}
                           />
@@ -585,11 +585,11 @@ export default function HistoryTimeline() {
                           isLeft ? "md:justify-start md:pl-12" : "md:justify-end md:pr-12"
                         }`}>
                           <motion.div 
-                            className="text-white font-black text-[12rem] md:text-[18rem] leading-none select-none group-hover:text-[#E32219] transition-all duration-1000 whitespace-nowrap overflow-visible"
-                            initial={{ opacity: 0, scale: 0.8, x: isLeft ? -150 : 150, rotate: isLeft ? -10 : 10 }}
-                            whileInView={{ opacity: 0.1, scale: 1.3, x: 0, rotate: 0 }}
-                            viewport={{ once: false, amount: 0.1 }}
-                            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                            className="text-white font-black text-[6rem] md:text-[18rem] leading-none select-none group-hover:text-[#E32219] transition-all duration-1000 whitespace-nowrap"
+                            initial={{ opacity: 0, scale: 0.8, x: isLeft ? -50 : 50, rotate: isLeft ? -5 : 5 }}
+                            whileInView={{ opacity: 0.05, scale: 1.1, x: 0, rotate: 0 }}
+                            viewport={{ once: false, amount: 0.2 }}
+                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                           >
                              {item.year.split(' ').pop()}
                           </motion.div>
@@ -664,7 +664,7 @@ export default function HistoryTimeline() {
           
           <div className="relative max-w-3xl mx-auto">
             <motion.div
-              className="relative bg-black/40 backdrop-blur-sm rounded-2xl p-8 md:p-10 border border-white/5 overflow-hidden"
+              className="relative bg-black/40 backdrop-blur-sm rounded-2xl p-6 md:p-10 border border-white/5 overflow-hidden"
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >
@@ -676,7 +676,7 @@ export default function HistoryTimeline() {
               
               <div className="relative">
                 <motion.div
-                  className="text-6xl text-[#E32219]/20 mb-2 font-serif"
+                  className="text-4xl md:text-6xl text-[#E32219]/20 mb-2 font-serif"
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
