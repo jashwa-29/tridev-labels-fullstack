@@ -131,6 +131,7 @@ export default function ChatWidget() {
     });
 
     newSocket.on('receive_message', (msg) => {
+        if (msg.sender === 'system') return;
         setMessages(prev => [...prev, msg]);
         if (!isOpen) setUnreadCount(c => c + 1);
     });
@@ -155,7 +156,7 @@ export default function ChatWidget() {
     });
 
     return () => newSocket.close();
-  }, [visitorId, isOpen, initialFaqs]);
+  }, [visitorId, initialFaqs]);
 
   // UI Effects
   useEffect(() => {
@@ -164,24 +165,42 @@ export default function ChatWidget() {
 
   useEffect(() => {
     if (isOpen) setUnreadCount(0);
-    else if (!hasGreeted) {
+    else {
         // Auto-open logic - Delayed for 90+ Lighthouse Performance
         const timer = setTimeout(() => setIsOpen(true), 12000);
         return () => clearTimeout(timer);
     }
-  }, [isOpen, hasGreeted]);
+  }, [isOpen]);
 
-  // Initial Bot Flow
+  // Initial Bot Flow — fires when widget opens and no messages exist
   useEffect(() => {
     if (isOpen && !hasGreeted && messages.length === 0) {
         setHasGreeted(true);
         setTimeout(() => {
-            botReply("Hi! Welcome to Tridev Labels. I'm your digital assistant. May I know your name to get started?");
+            sendBotReply("Hi! Welcome to Tridev Labels. I'm your digital assistant. May I know your name to get started?");
         }, 1000);
     }
   }, [isOpen, hasGreeted, messages]);
 
   // --- Handlers ---
+
+  const sendBotReply = (text) => {
+    setIsBotTyping(true);
+    setTimeout(() => {
+        setIsBotTyping(false);
+        if (socket && visitorId) {
+            socket.emit('send_message', {
+                visitorId,
+                text,
+                sender: 'bot',
+                isAdmin: false,
+                timestamp: new Date()
+            });
+        } else {
+            setMessages(prev => [...prev, { sender: 'bot', text, timestamp: new Date() }]);
+        }
+    }, 1200);
+  };
 
   const botReply = (text) => {
     setIsBotTyping(true);
@@ -236,14 +255,14 @@ export default function ChatWidget() {
             setUserDetails(prev => ({ ...prev, name }));
             socket.emit('update_visitor_info', { visitorId, name, message: userMsg });
             setStep('ask_phone');
-            botReply(`Nice to meet you, ${name.split(' ')[0]}! What is your phone number?`);
+            sendBotReply(`Nice to meet you, ${name.split(' ')[0]}! What is your phone number?`);
         } else if (step === 'ask_phone') {
             const phone = text.replace(/\D/g, '');
             if (phone.length < 10) return botReply("Please enter a valid 10-digit phone number.");
             setUserDetails(prev => ({ ...prev, phone }));
             socket.emit('update_visitor_info', { visitorId, phone, message: userMsg });
             setStep('ask_email');
-            botReply("Great. And your email address?");
+            sendBotReply("Great. And your email address?");
         } else if (step === 'ask_email') {
             const email = text.toLowerCase().match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/);
             if (!email) return botReply("That doesn't look like a valid email. Please check and try again.");
@@ -251,7 +270,7 @@ export default function ChatWidget() {
             setUserDetails(finalDetails);
             socket.emit('update_visitor_info', { visitorId, ...finalDetails, message: userMsg });
             setStep('chat_live');
-            botReply("Connecting you to our team... Feel free to ask anything!");
+            sendBotReply("Connecting you to our team... Feel free to ask anything!");
         }
     }
   };

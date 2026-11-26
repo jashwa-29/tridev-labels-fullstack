@@ -21,30 +21,18 @@ export default function Header() {
   const [dynamicServices, setDynamicServices] = useState([]);
 
   useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const response = await serviceService.getAll();
-        if (response.success) {
-          setDynamicServices(response.data.map(s => ({
-            name: s.title,
-            href: `/services/${s.slug}`,
-            desc: s.subtitle.length > 30 ? s.subtitle.substring(0, 30) + '...' : s.subtitle
-          })));
-        }
-      } catch (err) {
-        console.error('Failed to fetch services for header:', err);
-      }
-    };
-    fetchServices();
+    setDynamicServices([
+      { name: 'Dummy Service 1', href: '/services/dummy-service-1', desc: 'Dummy description for service 1' },
+      { name: 'Dummy Service 2', href: '/services/dummy-service-2', desc: 'Dummy description for service 2' },
+      { name: 'Dummy Service 3', href: '/services/dummy-service-3', desc: 'Dummy description for service 3' },
+    ]);
   }, []);
 
   const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
     { name: 'Capabilities', href: '/capabilities' },
-    { name: 'Services', href: '#', hasDropdown: true },
-    { name: 'Export', href: '/export' },
-    { name: 'Our Blogs', href: '/blog' },
+    { name: 'Services', href: '/services' },
   ];
 
   // Close menus on route change

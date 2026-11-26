@@ -27,8 +27,15 @@ const socketHandler = (io) => {
     socket.on('join_chat', async (visitorId) => {
       socket.visitorId = visitorId;
       socket.join(visitorId);
-      const chat = await Chat.findOne({ visitorId, status: { $ne: 'closed' } });
-      if (chat) socket.emit('chat_history', chat.messages);
+      let chat = await Chat.findOne({ visitorId, status: { $ne: 'closed' } });
+      if (!chat) {
+        chat = new Chat({ visitorId, messages: [] });
+        await chat.save();
+        socket.emit('chat_history', []);
+      } else {
+        const userMessages = chat.messages.filter(msg => !msg.isSystem);
+        socket.emit('chat_history', userMessages);
+      }
     });
 
     socket.on('admin_join', () => {
@@ -186,9 +193,10 @@ const socketHandler = (io) => {
             if (chat) {
                 // Add a system note that the user has left
                 chat.messages.push({
-                    sender: 'bot',
+                    sender: 'system',
                     text: 'User has closed the tab or left the website.',
-                    timestamp: new Date()
+                    timestamp: new Date(),
+                    isSystem: true
                 });
                 await chat.save();
                 io.to('admin_room').emit('chat_updated', chat);
@@ -201,9 +209,10 @@ const socketHandler = (io) => {
                         if (pendingChat) {
                             pendingChat.status = 'closed';
                             pendingChat.messages.push({
-                                sender: 'bot',
+                                sender: 'system',
                                 text: 'Session automatically closed after 5 minutes of user absence.',
-                                timestamp: new Date()
+                                timestamp: new Date(),
+                                isSystem: true
                             });
                             await pendingChat.save();
                             io.to('admin_room').emit('chat_updated', pendingChat);

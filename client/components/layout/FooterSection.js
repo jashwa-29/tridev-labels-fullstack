@@ -11,20 +11,11 @@ export default function FooterSection() {
   const [dynamicServices, setDynamicServices] = useState([]);
 
   useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const response = await serviceService.getAll();
-        if (response.success) {
-          setDynamicServices(response.data.map(s => ({
-            name: s.title,
-            href: `/services/${s.slug}`
-          })));
-        }
-      } catch (err) {
-        console.error('Failed to fetch services for footer:', err);
-      }
-    };
-    fetchServices();
+    setDynamicServices([
+      { name: 'Dummy Service 1', href: '/services/dummy-service-1' },
+      { name: 'Dummy Service 2', href: '/services/dummy-service-2' },
+      { name: 'Dummy Service 3', href: '/services/dummy-service-3' },
+    ]);
   }, []);
 
   const scrollToTop = () => {
@@ -38,8 +29,6 @@ export default function FooterSection() {
     company: [
       { name: 'About Us', href: '/about' },
       { name: 'Our Process', href: '/process' },
-      { name: 'Latest Insights', href: '/blog' },
-      { name: 'Exports', href: '/export' },
       { name: 'Careers', href: '/careers' },
     ],
     social: [

@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
-  sender: { type: String, enum: ['user', 'admin', 'bot'], required: true },
+  sender: { type: String, enum: ['user', 'admin', 'bot', 'system'], required: true },
   text: { type: String },
   timestamp: { type: Date, default: Date.now },
-  isAdmin: { type: Boolean, default: false }
+  isAdmin: { type: Boolean, default: false },
+  isSystem: { type: Boolean, default: false }
 });
 
 const chatSchema = new mongoose.Schema({

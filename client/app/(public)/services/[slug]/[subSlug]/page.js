@@ -4,14 +4,30 @@ import SubProductDetail from '@/components/services/SubProductDetail';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 async function getService(slug) {
-  try {
-    const res = await fetch(`${API_URL}/services/${slug}`, { next: { revalidate: 60 } });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.data;
-  } catch (error) {
-    return null;
-  }
+  return {
+    _id: '1',
+    title: 'Dummy Service',
+    slug: slug,
+    subtitle: 'Dummy Subtitle',
+    description: 'Dummy description for service',
+    heroImage: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80',
+    overview: 'Dummy overview',
+    features: ['Dummy Feature 1', 'Dummy Feature 2'],
+    technicalSpecs: [{ property: 'Spec 1', value: 'Value 1' }],
+    subProducts: [
+      {
+        _id: 'sub-1',
+        title: 'Dummy Sub Product',
+        slug: 'dummy-sub-product',
+        desc: 'Dummy description for sub product',
+        image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80',
+        features: ['Sub Feature 1'],
+        applications: ['App 1'],
+        specifications: [{ name: 'Spec 1', value: 'Value 1' }]
+      }
+    ],
+    faqs: [{ question: 'Q1', answer: 'A1' }]
+  };
 }
 
 export async function generateMetadata({ params }) {

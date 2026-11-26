@@ -31,17 +31,33 @@ export default function FinishesGallery() {
   const headerRef = useRef(null);
 
   useEffect(() => {
-    const fetchFinishes = async () => {
-      try {
-        const data = await galleryService.getAll();
-        setFinishes(data.data || []);
-      } catch (err) {
-        console.error("Failed to fetch gallery items", err);
-      } finally {
-        setLoading(false);
+    setFinishes([
+      {
+        _id: '1',
+        title: 'Dummy Finish 1',
+        description: 'Dummy description for finish 1',
+        image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80',
+        icon: 'Sparkles',
+        features: ['Feature 1', 'Feature 2']
+      },
+      {
+        _id: '2',
+        title: 'Dummy Finish 2',
+        description: 'Dummy description for finish 2',
+        image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80',
+        icon: 'Layers',
+        features: ['Feature 1', 'Feature 2']
+      },
+      {
+        _id: '3',
+        title: 'Dummy Finish 3',
+        description: 'Dummy description for finish 3',
+        image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80',
+        icon: 'Shield',
+        features: ['Feature 1', 'Feature 2']
       }
-    };
-    fetchFinishes();
+    ]);
+    setLoading(false);
   }, []);
 
   useEffect(() => {

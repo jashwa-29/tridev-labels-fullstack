@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getImgUrl } from '@/utils/image-url';
@@ -43,9 +43,31 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function SubProductDetail({ service, subProduct }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeImage, setActiveImage] = useState({ url: subProduct.image, alt: subProduct.imageAlt });
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
   const containerRef = useRef(null);
+
+  const gallery = useCallback(() => {
+    const items = [];
+    if (subProduct?.image) {
+      items.push({ url: subProduct.image, alt: subProduct.imageAlt || subProduct.title || 'Product image' });
+    }
+    if (subProduct?.gallery && Array.isArray(subProduct.gallery)) {
+      subProduct.gallery.forEach(img => {
+        if (img?.url) {
+          items.push({ url: img.url, alt: img.alt || subProduct.imageAlt || subProduct.title || 'Gallery image' });
+        }
+      });
+    }
+    return items;
+  }, [subProduct]);
+
+  const galleryItems = gallery();
+  const currentImage = galleryItems[activeImageIndex] || galleryItems[0];
+
+  useEffect(() => {
+    setActiveImageIndex(0);
+  }, [subProduct]);
 
   useEffect(() => {
     if (!subProduct) return;
@@ -107,8 +129,6 @@ export default function SubProductDetail({ service, subProduct }) {
 
   if (!subProduct) return null;
 
-  const gallery = [{ url: subProduct.image, alt: subProduct.imageAlt }, ...(subProduct.gallery || [])].filter(item => item && item.url);
-
   // Icon mapping for specifications
   const getSpecIcon = (label) => {
     const icons = {
@@ -148,35 +168,49 @@ export default function SubProductDetail({ service, subProduct }) {
           
           <div className="max-w-7xl mx-auto">
             {/* 1. Featured Hero Visual */}
-            {subProduct.image && (
+            {currentImage?.url && (
               <div className="mb-8 relative z-10">
-                <div className="relative aspect-video md:aspect-[21/9] overflow-hidden rounded-[24px] md:rounded-[32px] hero-image">
+                <div className="relative aspect-video md:aspect-[21/9] overflow-hidden rounded-[24px] md:rounded-[32px] hero-image bg-gray-100">
                   <Image
-                    src={getImgUrl(activeImage.url || activeImage)}
-                    alt={activeImage.alt || subProduct.imageAlt || subProduct.title}
+                    key={currentImage.url}
+                    src={getImgUrl(currentImage.url)}
+                    alt={currentImage.alt || subProduct.imageAlt || subProduct.title}
                     fill
                     priority
-                    className="object-cover"
+                    unoptimized
+                    className="object-cover transition-opacity duration-300"
                     sizes="(max-width: 768px) 100vw, 800px"
+                    onError={(e) => { e.currentTarget.src = '/fallback-image.jpg'; }}
                   />
                 </div>
                 
                 {/* Gallery Thumbnails */}
-                {gallery.length > 1 && (
-                  <div className="flex gap-4 mt-6 overflow-x-auto pb-2 scrollbar-hide">
-                    {gallery.map((img, idx) => (
-                      <button 
-                        key={idx}
-                        onClick={() => setActiveImage(img)}
-                        className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 transition-all duration-300 shrink-0 ${
-                          (activeImage.url || activeImage) === (img.url || img)
-                            ? 'border-[#E32219] scale-110' 
-                            : 'border-gray-100 opacity-60 hover:opacity-100'
-                        }`}
-                      >
-                        <Image src={getImgUrl(img.url || img)} alt={img.alt || "Product view"} fill className="object-cover" unoptimized />
-                      </button>
-                    ))}
+                {galleryItems.length > 1 && (
+                  <div className="flex gap-3 mt-6 overflow-x-auto pb-2 scrollbar-hide">
+                    {galleryItems.map((img, idx) => {
+                      const isActive = idx === activeImageIndex;
+                      return (
+                        <button 
+                          key={`${img.url}-${idx}`}
+                          onClick={() => setActiveImageIndex(idx)}
+                          className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 transition-all duration-300 shrink-0 ${
+                            isActive
+                              ? 'border-[#E32219] scale-105 shadow-lg shadow-[#E32219]/20' 
+                              : 'border-gray-200 opacity-70 hover:opacity-100 hover:border-gray-400'
+                          }`}
+                        >
+                          <Image src={getImgUrl(img.url)} alt={img.alt || subProduct.imageAlt || subProduct.title} fill className="object-cover" unoptimized />
+                          {isActive && (
+                            <div className="absolute inset-0 ring-2 ring-[#E32219] ring-offset-2 rounded-xl" />
+                          )}
+                          {!isActive && galleryItems.length > 1 && (
+                            <div className="absolute bottom-1 right-1 bg-black/60 text-white text-[8px] font-bold px-1.5 py-0.5 rounded">
+                              {idx + 1}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>

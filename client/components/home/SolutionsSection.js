@@ -99,15 +99,38 @@ export default function SolutionsSection() {
   const headerRef = useRef(null);
 
   useEffect(() => {
-    const fetchSolutions = async () => {
-      try {
-        const response = await serviceService.getAll();
-        setDynamicSolutions(response.data || []);
-      } catch (err) {
-        console.error('Failed to fetch solutions:', err);
+    setDynamicSolutions([
+      {
+        _id: '1',
+        title: 'Dummy Service 1',
+        slug: 'dummy-service-1',
+        subtitle: 'Dummy Subtitle',
+        description: 'Dummy description for service 1.',
+        icon: 'Box',
+        featuredImage: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80',
+        features: ['Feature 1', 'Feature 2']
+      },
+      {
+        _id: '2',
+        title: 'Dummy Service 2',
+        slug: 'dummy-service-2',
+        subtitle: 'Dummy Subtitle',
+        description: 'Dummy description for service 2.',
+        icon: 'Layers',
+        featuredImage: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80',
+        features: ['Feature 1', 'Feature 2']
+      },
+      {
+        _id: '3',
+        title: 'Dummy Service 3',
+        slug: 'dummy-service-3',
+        subtitle: 'Dummy Subtitle',
+        description: 'Dummy description for service 3.',
+        icon: 'Shield',
+        featuredImage: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80',
+        features: ['Feature 1', 'Feature 2']
       }
-    };
-    fetchSolutions();
+    ]);
   }, []);
 
   useEffect(() => {

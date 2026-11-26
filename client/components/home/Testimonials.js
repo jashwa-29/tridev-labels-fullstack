@@ -48,24 +48,7 @@ export default function Testimonials() {
   const containerRef = useRef(null);
   
   useEffect(() => {
-    const fetchTestimonials = async () => {
-      try {
-        const res = await testimonialService.getAll();
-        if (res.data && res.data.length > 0) {
-          // Map backend 'company' to ensure consistency if it differs
-          const mappedData = res.data.map(item => ({
-            ...item,
-            brand: item.company || item.brand || "Industrial Partner"
-          }));
-          setTestimonials(mappedData);
-        }
-      } catch (err) {
-        console.error("Narrative retrieval failed:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTestimonials();
+    setLoading(false);
   }, []);
 
   useEffect(() => {
